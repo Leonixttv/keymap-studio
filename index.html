@@ -7,6 +7,7 @@
   <title>Keymap Studio</title>
   <link rel="stylesheet" href="style.css">
   <script defer src="vendor/xz-decompress.js"></script>
+  <script defer src="i18n.js"></script>
   <script defer src="usb.js"></script>
   <script defer src="layout.js"></script>
   <script defer src="rgb-preview.js"></script>
@@ -19,7 +20,7 @@
 <body>
   <header class="top">
     <div class="brand"><span class="mark" aria-hidden="true">K</span><span>Keymap <b>Studio</b></span></div>
-    <div class="connection"><span id="device" class="device">Modalità demo</span><button id="connect" class="primary">Collega via USB</button></div>
+    <div class="connection"><select id="uiLanguage" aria-label="Interface language"></select><span id="device" class="device">Modalità demo</span><button id="connect" class="primary">Collega via USB</button></div>
   </header>
   <main>
     <section class="intro">
@@ -68,7 +69,7 @@
           <h3>Legende</h3>
           <label for="legendLanguage">Lingua del layout</label>
           <select id="legendLanguage"></select>
-          <p>La lingua qui cambia le legende nell’app. Per digitare nella stessa lingua, usa il layout corrispondente in Windows.</p>
+          <p>Legende per la visualizzazione. La digitazione segue il layout del sistema operativo.</p>
           <label class="layout-check"><input type="checkbox" id="shiftLegends"> Mostra anche i simboli con Shift</label>
         </div>
         <div class="layout-control-card">

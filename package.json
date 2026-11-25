@@ -1,14 +1,17 @@
 {
   "name": "keymap-studio",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "private": true,
-  "description": "Configuratore USB per tastiere custom",
+  "description": "Open-source USB configurator for custom Vial and VIA keyboards",
   "author": "Keymap Studio contributors",
   "license": "GPL-2.0-or-later",
   "main": "main.cjs",
   "scripts": {
     "start": "electron .",
-    "build:portable": "powershell -NoProfile -ExecutionPolicy Bypass -File Build-Portable.ps1"
+    "build:portable": "powershell -NoProfile -ExecutionPolicy Bypass -File Build-Portable.ps1",
+    "build:mac": "electron-builder --mac zip --publish never",
+    "build:linux": "electron-builder --linux tar.gz --publish never",
+    "check": "node check.cjs"
   },
   "devDependencies": {
     "electron": "45.5.0",
@@ -17,15 +20,48 @@
   "build": {
     "appId": "org.keymapstudio.configurator",
     "productName": "Keymap Studio",
-    "artifactName": "Keymap-Studio-Portable.exe",
-    "files": ["main.cjs", "preload.cjs", "index.html", "layout.js", "app.js", "physical-selection.js", "usb.js", "rgb-preview.js", "advanced.js", "device-backup.js", "matrix.js", "style.css", "icon.ico", "vendor/**", "COPYING"],
+    "files": [
+      "main.cjs",
+      "preload.cjs",
+      "index.html",
+      "layout.js",
+      "app.js",
+      "physical-selection.js",
+      "usb.js",
+      "rgb-preview.js",
+      "advanced.js",
+      "device-backup.js",
+      "matrix.js",
+      "style.css",
+      "icon.ico",
+      "vendor/**",
+      "COPYING",
+      "i18n.js",
+      "icon.png"
+    ],
     "win": {
       "icon": "icon.ico",
       "signAndEditExecutable": false,
-      "target": "portable"
+      "target": "portable",
+      "artifactName": "Keymap-Studio-${version}-Windows-${arch}.exe"
     },
     "portable": {
       "requestExecutionLevel": "user"
+    },
+    "mac": {
+      "target": "zip",
+      "icon": "icon.png",
+      "identity": "-",
+      "notarize": false,
+      "category": "public.app-category.utilities",
+      "artifactName": "Keymap-Studio-${version}-macOS-${arch}.zip"
+    },
+    "linux": {
+      "target": "tar.gz",
+      "icon": "icon.png",
+      "category": "Utility",
+      "executableName": "keymap-studio",
+      "artifactName": "Keymap-Studio-${version}-Linux-${arch}.tar.gz"
     }
   }
 }

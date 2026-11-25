@@ -100,3 +100,9 @@ footer{border-top:1px solid var(--line);padding-block:23px;display:flex;justify-
   .hero-copy h1{font-size:clamp(40px,10.2vw,53px)}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+nav select{color:var(--text);background:#202a20;border:1px solid #53614e;border-radius:7px;padding:6px;font:inherit}
+.download-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.download-grid article{padding:19px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(140deg,#202820,#161b17)}
+.download-grid p{font-size:14px;color:var(--muted);margin:8px 0 12px}
+.download-grid .button{font-size:13px;padding:8px 11px;min-height:39px}
+@media(max-width:720px){.download-grid{grid-template-columns:1fr}nav{flex-wrap:wrap}}

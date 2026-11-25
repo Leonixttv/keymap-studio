@@ -7,6 +7,10 @@ const legendLanguages = {
   de: "Tedesco · QWERTZ",
   fr: "Francese tradizionale · AZERTY",
   es: "Spagnolo (Spagna) · QWERTY",
+  pt: "Português (Portugal) · QWERTY",
+  sv: "Svenska / Suomi · QWERTY",
+  dvorak: "English (US) · Dvorak",
+  colemak: "English (US) · Colemak",
 };
 const symbols = [45,46,47,48,49,50,51,52,53,54,55,56,100];
 const legends = {
@@ -22,7 +26,18 @@ const legends = {
     letters:{A:"Q",Q:"A",W:"Z",Z:"W",M:",?"},punctuation:[")°","=+","^¨","$£","*µ","*µ","M","ù%","²",";.",":/","!§","<>"]},
   es:{numbers:["1!","2\"","3·","4$","5%","6&","7/","8(","9)","0="],
     punctuation:["'?","¡¿","`^","+*","çÇ","çÇ","ñÑ","´¨","ºª",",;",".:","-_","<>"]},
+  pt:{numbers:["1!","2\"","3#","4$","5%","6&","7/","8(","9)","0="],
+    punctuation:["'?","«»","+*","´`","~^","~^","çÇ","ºª","\\|",",;",".:","-_","<>"]},
+  sv:{numbers:["1!","2\"","3#","4¤","5%","6&","7/","8(","9)","0="],
+    punctuation:["+?","´`","åÅ","¨^","'*","'*","öÖ","äÄ","§½",",;",".:","-_","<>"]},
 };
+legends.dvorak={...legends.us,
+  letters:{B:"X",C:"J",D:"E",E:".>",F:"U",G:"I",H:"D",I:"C",J:"H",K:"T",L:"N",
+    N:"B",O:"R",P:"L",Q:"'\"",R:"P",S:"O",T:"Y",U:"G",V:"K",W:",<",X:"Q",Y:"F",Z:";:"},
+  punctuation:["[{","]}","/?","=+","\\|","\\|","S","-_","`~","W","V","Z","\\|"]};
+legends.colemak={...legends.us,
+  letters:{E:"F",F:"T",G:"D",I:"U",J:"N",K:"E",L:"I",N:"K",O:"Y",P:";:",R:"P",
+    S:"R",T:"G",U:"L",Y:"J"},punctuation:legends.us.punctuation.map((value,i)=>i===6?"O":value)};
 const palettes = {
   graphite:["Grafite","#303b36","#39433c","#d7fa77"],
   ocean:["Oceano","#183f54","#315871","#8debff"],
@@ -99,7 +114,7 @@ function updateAppearance() {
   render();
   clearTimeout(appearanceSave);
   appearanceSave=setTimeout(()=>{
-    window.studioPreferences?.save({...appearance}).catch(()=>{
+    window.studioPreferences?.save({...appearance,uiLanguage}).catch(()=>{
       $("layoutStatus").textContent="Impossibile salvare le preferenze grafiche.";
     });
   },180);
@@ -247,6 +262,7 @@ document.addEventListener("DOMContentLoaded",async ()=>{
   try {
     const saved=await window.studioPreferences?.load();
     if (saved && !touched) {
+      if (saved.uiLanguage) setUiLanguage(saved.uiLanguage);
       if (Object.hasOwn(legendLanguages,saved.language)) appearance.language=saved.language;
       if (typeof saved.shift==="boolean") appearance.shift=saved.shift;
       if (saved.palette==="custom" || Object.hasOwn(palettes,saved.palette)) appearance.palette=saved.palette;

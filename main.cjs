@@ -28,13 +28,14 @@ function registerPreferences() {
   });
   ipcMain.handle("appearance:save", (event, data) => {
     if (!validSender(event) || !data ||
-        !/^(us|it|uk|de|fr|es)$/.test(data.language) || typeof data.shift !== "boolean" ||
+        !/^(us|it|uk|de|fr|es|pt|sv|dvorak|colemak)$/.test(data.language) || typeof data.shift !== "boolean" ||
+        !/^(it|en|es|fr|de)$/.test(data.uiLanguage) ||
         !/^(graphite|ocean|cream|violet|arcade|custom)$/.test(data.palette) ||
         !["caseColor","keyColor","accentColor"].every((key) => /^#[0-9a-f]{6}$/i.test(data[key]))) {
       throw Error("Preferenze grafiche non valide.");
     }
-    const { language, shift, palette, caseColor, keyColor, accentColor } = data;
-    const safe = { language, shift, palette, caseColor, keyColor, accentColor };
+    const { language, uiLanguage, shift, palette, caseColor, keyColor, accentColor } = data;
+    const safe = { language, uiLanguage, shift, palette, caseColor, keyColor, accentColor };
     preferenceWrites = preferenceWrites.catch(() => {}).then(async () => {
       await fs.mkdir(path.dirname(file), { recursive:true });
       const temporary = file+"."+process.pid+".tmp";
@@ -67,14 +68,18 @@ function selectHidDevice(window, event, details, callback) {
 }
 
 function createWindow() {
-  Menu.setApplicationMenu(null);
+  if(process.platform==="darwin"){
+    Menu.setApplicationMenu(Menu.buildFromTemplate([
+      {role:"appMenu"},{role:"editMenu"},{role:"windowMenu"},
+    ]));
+  } else Menu.setApplicationMenu(null);
   const window = new BrowserWindow({
     width: 1200,
     height: 910,
     minWidth: 440,
     minHeight: 570,
     backgroundColor: "#141616",
-    icon: path.join(__dirname, "icon.ico"),
+    icon: path.join(__dirname, process.platform==="win32" ? "icon.ico" : "icon.png"),
     autoHideMenuBar: true,
     show: false,
     webPreferences: {
@@ -86,13 +91,15 @@ function createWindow() {
     },
   });
   const contents = window.webContents;
+  const session = contents.session;
   contents.setWindowOpenHandler(() => ({ action: "deny" }));
   contents.on("will-navigate", (event) => event.preventDefault());
-  contents.session.setPermissionCheckHandler((requester, permission, origin, details) =>
+  session.setPermissionCheckHandler((requester, permission, origin, details) =>
     requester === contents && permission === "hid" && details.securityOrigin === "file:///");
-  contents.session.setPermissionRequestHandler((_requester, _permission, callback) => callback(false));
-  contents.session.on("select-hid-device", (event, details, callback) =>
-    selectHidDevice(window, event, details, callback));
+  session.setPermissionRequestHandler((_requester, _permission, callback) => callback(false));
+  const chooser=(event,details,callback)=>selectHidDevice(window,event,details,callback);
+  session.on("select-hid-device",chooser);
+  window.once("closed",()=>session.removeListener("select-hid-device",chooser));
 
   window.once("ready-to-show", () => window.show());
   window.loadFile(path.join(__dirname, "index.html")).catch((error) => {
@@ -105,4 +112,5 @@ app.whenReady().then(() => {
   registerPreferences();
   createWindow();
 });
-app.on("window-all-closed", () => app.quit());
+app.on("window-all-closed", () => {if(process.platform!=="darwin") app.quit();});
+app.on("activate", () => {if(BrowserWindow.getAllWindows().length===0) createWindow();});

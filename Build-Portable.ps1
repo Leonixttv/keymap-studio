@@ -4,7 +4,7 @@ $ErrorActionPreference = 'Stop'
 Push-Location $PSScriptRoot
 try {
     if (-not $UseExistingPackage) {
-        $builder = @("exec", "--", "electron-builder", "--win", "--x64", "--dir",
+        $builder = @("exec", "--", "electron-builder", "--win", "--x64", "--dir", "--publish", "never",
             "--config.directories.output=$BuildDirectory")
         if ($ElectronDist) { $builder += "--config.electronDist=$ElectronDist" }
         npm.cmd @builder
