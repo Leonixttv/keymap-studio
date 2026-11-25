@@ -1,22 +1,32 @@
 ﻿# Keymap Studio
 
-**Configuratore open source per tastiere custom Vial e VIA.** Rimappa i tasti, crea layer Fn e personalizza RGB, macro e layout da un’app portatile per Windows.
+Open-source configurator for custom **Vial and VIA keyboards**. Remap keys and Fn layers, customise lighting and layout, create macros, test switches and back up your settings.
 
-[**Scarica per Windows**](https://github.com/Leonixttv/keymap-studio/releases/latest) · [Sito del progetto](https://leonixttv.github.io/keymap-studio/) · [Segnala un problema](https://github.com/Leonixttv/keymap-studio/issues)
+[Project website](https://leonixttv.github.io/keymap-studio/) · [Portable downloads](https://github.com/Leonixttv/keymap-studio/releases/latest) · [Italian guide](LEGGIMI.md) · [Report an issue](https://github.com/Leonixttv/keymap-studio/issues)
 
-![Mappa tasti di Keymap Studio](docs/assets/mappa.png)
+![Keymap Studio keymap](docs/assets/mappa.png)
 
-## Per iniziare
+## Getting started
 
-1. Scarica e avvia il file EXE portatile per Windows x64.
-2. Con **Vial 5 o 6**, premi **Collega via USB**. Con **VIA 12 o 13**, carica prima il JSON del produttore da **Definizione VIA**.
-3. Seleziona un tasto sulla mappa o premilo fisicamente. Assegna una funzione o premi **Assegna Fn** per collegarlo a un layer.
-4. Premi **Scrivi sulla tastiera** per rendere persistenti le modifiche. Usa **Backup** prima di modificare una configurazione importante.
+| Platform | Portable package |
+| --- | --- |
+| Windows x64 | Open the EXE directly. |
+| macOS Apple Silicon or Intel | Extract the appropriate ZIP and open Keymap Studio.app. This build is ad-hoc signed and is not notarized. |
+| Linux x64 | Extract the archive and run `./keymap-studio` from the extracted folder. USB access may need a [udev rule](https://get.vial.today/manual/linux-udev.html). |
 
-Funziona offline. Le funzioni disponibili dipendono dal firmware. Il flusso USB è stato verificato con dispositivi simulati. L’EXE di questa release è senza firma digitale.
+- For **Vial protocols 5 and 6**, choose **Connect via USB**. For **VIA protocols 12 and 13**, first load the keyboard maker's JSON via **VIA definition**.
+- Select a key on the keymap or press it, assign an action and choose **Write to keyboard**.
+- The site and primary app controls are available in English, Italian, Spanish, French and German. Some advanced messages remain in Italian. Keyboard legends support ten layouts and follow a separate setting from your operating system's input language.
+- Hardware features depend on the firmware. USB workflows were tested with simulated devices. Firmware flashing and proprietary VIA menus remain outside this release.
 
-## Codice e contributi
+## Build from source
 
-Leggi la [guida all’uso e alla compilazione](LEGGIMI.md). Per segnalare un problema, indica il modello, il firmware, la versione di Keymap Studio e i passaggi per riprodurlo.
+Install Node.js 24, then run `npm ci`. Use `npm start` to run from source.
 
-Il progetto è distribuito con licenza [GPL-2.0-or-later](COPYING). I componenti di terze parti mantengono le rispettive licenze.
+| Platform | Build command |
+| --- | --- |
+| Windows | `npm run build:portable` |
+| macOS | `npm run build:mac -- --arm64` or `npm run build:mac -- --x64` |
+| Linux | `npm run build:linux -- --x64` |
+
+The source is released under [GPL-2.0-or-later](COPYING). Third-party components retain their own licences.

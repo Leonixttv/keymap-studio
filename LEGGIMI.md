@@ -1,6 +1,6 @@
-﻿# Keymap Studio 0.5.2
+﻿# Keymap Studio 0.6.0
 
-Configuratore desktop open source, in italiano, per tastiere custom USB. Apri Keymap-Studio-Portable.exe su Windows x64. Funziona anche offline.
+Configuratore desktop open source, in italiano, per tastiere custom USB. Scarica il pacchetto portatile per Windows x64, macOS Apple Silicon o Intel, oppure Linux x64. Funziona anche offline.
 
 ## Collega una tastiera
 
@@ -11,7 +11,7 @@ Configuratore desktop open source, in italiano, per tastiere custom USB. Apri Ke
 ## Funzioni
 
 - **Mappa tasti** — assegnazione grafica per layer, codici QMK, multimediali, macro esistenti e profili JSON. L’importazione delle mappe si applica solo dopo conferma dalla scheda della mappa. Quando **Seleziona premendo un tasto** è attivo, premi un tasto fisico per evidenziarne la posizione. La selezione usa il segnale ricevuto da Windows e la mappa salvata. Se più posizioni producono lo stesso segnale, seleziona il tasto con il mouse. Per creare un tasto Fn, seleziona il tasto, scegli **Layer di Fn**, premi **Assegna Fn** e salva la mappa. Il tasto attiva il layer scelto finché lo tieni premuto.
-- **Layout** — anteprima delle alternative definite dal firmware, confronto con la disposizione attuale, legende per sei layout e colori personalizzabili. Per digitare con gli stessi simboli seleziona il layout corrispondente in Windows.
+- **Layout** — anteprima delle alternative definite dal firmware, confronto con la disposizione attuale, legende per dieci layout e colori personalizzabili. Per digitare con gli stessi simboli seleziona il layout corrispondente nel sistema operativo.
 - **Illuminazione** — selettore, campioni, HEX e anteprima animata. Supporta VialRGB, QMK RGBLight esposto da Vial e le voci standard VIA qmk_rgblight e qmk_rgb_matrix dichiarate nel JSON. La resa reale e gli effetti compilati dipendono dai LED e dal firmware.
 - **Funzioni avanzate** — macro a passaggi, manopole per layer, combo, tap dance, sostituzioni, ripetizione alternativa e impostazioni QMK disponibili sul dispositivo. Su Vial alcune scritture richiedono lo sblocco fisico. Per le macro di testo sono disponibili i caratteri ASCII stampabili. Per Invio e Tab usa un passaggio tasto.
 - **Test tasti** — input ricevuto dall’app e test switch via matrice USB quando il firmware e le dimensioni della matrice lo permettono.
