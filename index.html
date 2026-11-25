@@ -1,0 +1,145 @@
+﻿<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; base-uri 'none'; form-action 'none'">
+  <title>Keymap Studio</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="vendor/xz-decompress.js"></script>
+  <script defer src="usb.js"></script>
+  <script defer src="layout.js"></script>
+  <script defer src="rgb-preview.js"></script>
+  <script defer src="app.js"></script>
+  <script defer src="physical-selection.js"></script>
+  <script defer src="advanced.js"></script>
+  <script defer src="device-backup.js"></script>
+  <script defer src="matrix.js"></script>
+</head>
+<body>
+  <header class="top">
+    <div class="brand"><span class="mark" aria-hidden="true">K</span><span>Keymap <b>Studio</b></span></div>
+    <div class="connection"><span id="device" class="device">Modalità demo</span><button id="connect" class="primary">Collega via USB</button></div>
+  </header>
+  <main>
+    <section class="intro">
+      <div><p class="model">CONFIGURATORE USB · VIAL E VIA</p><h1 id="boardTitle">Tastiere custom</h1><p id="subtitle">Esplora la mappa demo o collega la tua tastiera.</p></div>
+      <div class="actions"><button id="viaDefinition">Definizione VIA</button><button id="import">Importa mappa</button><button id="export">Esporta mappa</button><input type="file" accept=".json,application/json" id="file" hidden><input type="file" accept=".json,application/json" id="viaFile" hidden></div>
+    </section>
+    <nav aria-label="Strumenti">
+      <button data-tab="map" aria-pressed="true">Mappa tasti</button>
+      <button data-tab="layout" aria-pressed="false">Layout</button>
+      <button data-tab="rgb" aria-pressed="false">Illuminazione</button>
+      <button data-tab="advanced" aria-pressed="false">Funzioni avanzate</button>
+      <button data-tab="backup" aria-pressed="false">Backup</button>
+      <button data-tab="test" aria-pressed="false">Test tasti</button>
+    </nav>
+    <section class="panel" id="map">
+      <div class="paneltop"><div><h2>Mappa tasti</h2><p>Seleziona un tasto, poi scegli la sua nuova funzione.</p></div><div id="layers" class="layers" aria-label="Layer"></div></div>
+      <div id="keyboard" class="keyboard" aria-label="Layout della tastiera"></div>
+      <div class="physical-hint">
+        <label><input id="physicalSelect" type="checkbox" checked> Seleziona premendo un tasto</label>
+        <span id="physicalHint" role="status"></span>
+      </div>
+      <div class="editor">
+        <div><label for="keycode">Assegnazione</label><p id="selection">Nessun tasto selezionato</p></div>
+        <select id="keycode" aria-label="Funzione del tasto"></select>
+        <button id="assign">Assegna</button>
+        <details><summary>Codice QMK</summary><div class="raw"><input id="raw" aria-label="Codice QMK esadecimale" placeholder="0x0004" maxlength="6"><button id="assignRaw">Assegna codice</button></div></details>
+      </div>
+      <div class="fn-editor">
+        <div><label for="fnLayer">Layer di Fn</label><p id="fnHelp"></p></div>
+        <select id="fnLayer" aria-describedby="fnHelp"></select>
+        <button id="assignFn" class="primary">Assegna Fn</button>
+      </div>
+      <div class="panelbottom"><span id="dirty"></span><div><button id="discard">Annulla modifiche</button> <button id="apply" class="primary">Applica</button></div></div>
+    </section>
+    <section class="panel layout-panel" id="layout" hidden>
+      <div class="layout-title">
+        <div><h2>Layout e aspetto</h2><p>Modifica la disposizione e guarda il risultato sulla tastiera qui sotto.</p></div>
+        <span class="layout-size" id="layoutCount"></span>
+      </div>
+      <div class="layout-controls">
+        <div class="layout-control-card">
+          <h3>Disposizione fisica</h3>
+          <div id="physicalOptions"></div>
+        </div>
+        <div class="layout-control-card">
+          <h3>Legende</h3>
+          <label for="legendLanguage">Lingua del layout</label>
+          <select id="legendLanguage"></select>
+          <p>La lingua qui cambia le legende nell’app. Per digitare nella stessa lingua, usa il layout corrispondente in Windows.</p>
+          <label class="layout-check"><input type="checkbox" id="shiftLegends"> Mostra anche i simboli con Shift</label>
+        </div>
+        <div class="layout-control-card">
+          <h3>Aspetto</h3>
+          <label for="layoutTheme">Palette</label>
+          <select id="layoutTheme"></select>
+          <div class="theme-colors">
+            <label>Case<input type="color" id="caseColor"></label>
+            <label>Tasti<input type="color" id="keyColor"></label>
+            <label>Accenti<input type="color" id="accentColor"></label>
+          </div>
+        </div>
+      </div>
+      <div class="layout-workbench">
+        <div class="preview-toolbar">
+          <div><h3 id="layoutPreviewTitle">Anteprima</h3><p id="layoutSummary" role="status"></p></div>
+          <button id="compareLayout" aria-pressed="false" disabled>Mostra attuale</button>
+        </div>
+        <div id="layoutKeyboard" class="keyboard" aria-label="Anteprima layout fisico"></div>
+      </div>
+      <div class="panelbottom"><span id="layoutStatus" role="status"></span><div><button id="discardLayout" disabled>Annulla modifiche</button> <button id="applyLayout" class="primary" disabled>Salva layout</button></div></div>
+    </section>
+    <section class="panel tool" id="rgb" hidden>
+      <div class="paneltop"><div><h2>Illuminazione underglow</h2><p id="rgbInfo">Prova l’anteprima dei colori in modalità demo.</p></div></div>
+      <div class="toolbody">
+        <figure class="preview">
+          <canvas id="glow" width="720" height="290" role="img" aria-label="Simulazione dei LED"></canvas>
+          <figcaption>Simulazione dell’effetto. La resa sulla tastiera può variare.</figcaption>
+          <button type="button" id="pauseRgb">Pausa anteprima</button>
+        </figure>
+        <form id="lightControls">
+          <label for="effect">Effetto</label><select id="effect"></select>
+          <label for="color">Colore</label>
+          <div class="color-input"><input type="color" id="color" value="#72ff80"><input id="colorHex" aria-label="Colore esadecimale" maxlength="7" spellcheck="false"></div>
+          <div class="swatches" id="swatches" aria-label="Colori predefiniti"></div>
+          <input type="hidden" id="hue" value="108"><input type="hidden" id="sat" value="175">
+          <label for="brightness">Luminosità</label><input type="range" id="brightness" min="0" max="255" value="180">
+          <label for="speed">Velocità</label><input type="range" id="speed" min="0" max="255" value="80">
+          <button type="submit" id="applyRgb" class="primary">Salva illuminazione</button>
+        </form>
+      </div>
+    </section>
+    <section class="panel tool" id="advanced" hidden>
+      <div class="paneltop"><div><h2>Funzioni avanzate</h2><p>Le opzioni disponibili dipendono dal firmware della tastiera.</p></div></div>
+      <div class="advanced-body">
+        <label for="feature">Funzione</label>
+        <select id="feature"><option value="macro">Macro</option><option value="combo">Combinazioni (combo)</option><option value="tap">Pressioni multiple (tap dance)</option><option value="encoder">Manopole</option><option value="override">Sostituzioni di tasto</option><option value="repeat">Ripetizione alternativa</option><option value="settings">Impostazioni QMK</option></select>
+        <p id="featureHelp"></p>
+        <div id="featureControls"></div>
+        <p id="featureStatus" role="status"></p>
+        <button id="saveFeature" class="primary" disabled>Salva</button>
+        <button id="cancelUnlock" hidden>Annulla sblocco</button>
+      </div>
+    </section>
+    <section class="panel tool" id="backup" hidden>
+      <div class="paneltop"><div><h2>Backup della tastiera</h2><p>Salva o ripristina in un file tutte le impostazioni accessibili sulla tastiera collegata.</p></div></div>
+      <div class="advanced-body">
+        <p id="backupSummary"></p>
+        <div class="actions"><button id="saveBackup" class="primary" disabled>Salva backup</button><button id="restoreBackup" disabled>Ripristina backup</button></div>
+        <input id="backupFile" type="file" accept=".json,application/json" hidden>
+        <p id="backupStatus" role="status"></p>
+        <button id="cancelBackupUnlock" hidden>Annulla sblocco</button>
+      </div>
+    </section>
+    <section class="panel tool" id="test" hidden>
+      <div class="paneltop"><div><h2>Test tasti</h2><p>Verifica l’input ricevuto dal PC o i singoli switch sulla matrice.</p></div><button id="clearTest">Pulisci</button></div>
+      <div class="advanced-body"><div class="actions"><button id="startMatrix" disabled>Test matrice USB</button><button id="stopMatrix" hidden>Termina test</button><button id="cancelMatrixUnlock" hidden>Annulla sblocco</button></div><p id="matrixStatus" role="status"></p></div>
+      <div id="matrixKeyboard" class="keyboard" aria-label="Test della matrice" hidden></div>
+      <div class="testbody" id="testBody"><p>Premi un tasto per iniziare.</p></div>
+    </section>
+    <footer><p id="status" role="status" aria-live="polite">Pronto.</p><span>Vial · USB</span></footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,97 @@
+﻿<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Keymap Studio è il configuratore open source per tastiere custom Vial e VIA su Windows. Rimappa i tasti, gestisci i layer e personalizza RGB e macro.">
+  <meta name="theme-color" content="#101311">
+  <title>Keymap Studio — Configura la tua tastiera custom</title>
+  <link rel="icon" href="assets/icon.ico">
+  <link rel="stylesheet" href="site.css">
+  <script defer src="site.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Vai al contenuto</a>
+  <header class="top wrap">
+    <a class="brand" href="./" aria-label="Keymap Studio"><span class="logo" aria-hidden="true">K</span> Keymap <strong>Studio</strong></a>
+    <nav aria-label="Navigazione principale">
+      <a href="#funzioni">Funzioni</a>
+      <a href="#compatibilita">Compatibilità</a>
+      <a href="https://github.com/Leonixttv/keymap-studio">GitHub ↗</a>
+    </nav>
+  </header>
+  <main id="main">
+    <section class="hero wrap" aria-labelledby="title">
+      <div class="hero-copy">
+        <p class="eyebrow">Configuratore open source per tastiere custom</p>
+        <h1 id="title">La tua tastiera,<br><em>come la vuoi.</em></h1>
+        <p class="lede">Rimappa i tasti, crea layer Fn e regola l’illuminazione con un’anteprima. Keymap Studio è un’app portatile per Windows che funziona anche offline.</p>
+        <div class="buttons">
+          <a class="button primary" href="https://github.com/Leonixttv/keymap-studio/releases/download/v0.5.2/Keymap-Studio-0.5.2-Portable.exe"><span aria-hidden="true">↓</span> Scarica per Windows</a>
+          <a class="button secondary" href="https://github.com/Leonixttv/keymap-studio">Vedi il codice ↗</a>
+        </div>
+        <p class="download-info">v0.5.2 · Windows x64 · EXE portatile · 151 MB</p>
+      </div>
+      <figure class="hero-visual">
+        <div class="app-window">
+          <div class="app-bar"><span class="mini-logo" aria-hidden="true">K</span> Keymap Studio <span class="app-mode">Modalità demo</span></div>
+          <img src="assets/mappa.png" alt="Mappa tasti di Keymap Studio con un tasto Fn assegnato al layer 1" width="1416" height="1342" fetchpriority="high">
+        </div>
+        <figcaption>La mappa tasti di Keymap Studio in modalità demo.</figcaption>
+      </figure>
+    </section>
+
+    <section id="funzioni" class="feature-section wrap" aria-labelledby="features-title">
+      <div class="section-head"><h2 id="features-title">Guarda cosa puoi fare</h2><p>Prova le anteprime e scegli da dove cominciare.</p></div>
+      <div class="features">
+        <article>
+          <div class="feature-icon" aria-hidden="true">⌨</div><h3>Tasti e layer</h3>
+          <p>Seleziona un tasto dalla mappa o premilo sulla tastiera. Assegna azioni, scorciatoie e un tasto Fn per passare a un altro layer mentre lo tieni premuto.</p>
+        </article>
+        <article>
+          <div class="feature-icon" aria-hidden="true">◈</div><h3>Layout e RGB</h3>
+          <p>Confronta le varianti fisiche, cambia le legende e personalizza i colori. Guarda gli effetti RGB animati prima di salvarli.</p>
+        </article>
+        <article>
+          <div class="feature-icon" aria-hidden="true">↶</div><h3>Macro e backup</h3>
+          <p>Configura macro, combo e manopole se il firmware le espone. Salva una copia della configurazione prima di sperimentare.</p>
+        </article>
+      </div>
+      <div class="gallery" data-gallery>
+        <div class="gallery-nav" role="group" aria-label="Anteprime dell’app">
+          <button type="button" data-preview="map" aria-pressed="true">Mappa tasti</button>
+          <button type="button" data-preview="layout" aria-pressed="false">Layout</button>
+          <button type="button" data-preview="rgb" aria-pressed="false">Illuminazione</button>
+        </div>
+        <figure id="preview-map" class="gallery-panel">
+          <img src="assets/mappa.png" width="1416" height="1342" loading="lazy" alt="Interfaccia per rimappare i tasti, con selezione fisica e controlli per creare un tasto Fn">
+          <figcaption>Seleziona un tasto e scegli il layer da associare a Fn.</figcaption>
+        </figure>
+        <figure id="preview-layout" class="gallery-panel" hidden>
+          <img src="assets/layout.png" width="1416" height="1376" loading="lazy" alt="Anteprima di una variante ISO con tasti evidenziati e legende italiane">
+          <figcaption>Confronta il layout attuale con la variante in anteprima.</figcaption>
+        </figure>
+        <figure id="preview-rgb" class="gallery-panel" hidden>
+          <img src="assets/rgb.png" width="1416" height="1158" loading="lazy" alt="Selettore colore e anteprima viola di un effetto RGB">
+          <figcaption>Scegli un colore e guarda una simulazione dell’effetto.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="compatibilita" class="compat wrap" aria-labelledby="compat-title">
+      <div class="section-head"><h2 id="compat-title">Collega la tua tastiera</h2><p>Le funzioni disponibili dipendono dal firmware installato.</p></div>
+      <div class="compat-grid">
+        <article><span class="protocol">Vial 5 e 6</span><h3>Collega via USB</h3><p>Apri l’app e collega la tastiera. Keymap Studio legge layout, layer e funzioni dal firmware.</p></article>
+        <article><span class="protocol">VIA 12 e 13</span><h3>Carica la definizione</h3><p>Apri <strong>Definizione VIA</strong>, scegli il JSON del produttore e collega il modello corrispondente. Sono supportate le funzioni standard.</p></article>
+      </div>
+      <p class="compat-note">La release è senza firma digitale. I flussi USB sono stati verificati con dispositivi simulati. Il flashing e i menu proprietari VIA restano fuori da questa versione.</p>
+    </section>
+
+    <section class="open-source wrap" aria-labelledby="source-title">
+      <div><h2 id="source-title">Un progetto aperto</h2><p>Il codice, la licenza GPL-2.0-or-later e le istruzioni di compilazione sono su GitHub. Per segnalare un problema, indica il modello della tastiera e la versione del firmware.</p></div>
+      <div class="buttons"><a class="button secondary" href="https://github.com/Leonixttv/keymap-studio">Repository ↗</a><a class="button secondary" href="https://github.com/Leonixttv/keymap-studio/issues">Segnala un problema ↗</a></div>
+    </section>
+  </main>
+  <footer class="wrap"><span>Keymap Studio</span><a href="https://github.com/Leonixttv/keymap-studio/releases">Tutte le versioni ↗</a></footer>
+</body>
+</html>
