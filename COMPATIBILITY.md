@@ -1,12 +1,12 @@
 # Keyboard compatibility
 
-Keymap Studio supports **firmware protocols**, rather than a guaranteed list of keyboard models. A keyboard's firmware and configuration determine whether it works; the name or PCB alone is not enough. The USB workflows have been tested with simulated devices, and **no physical keyboard model has yet been verified by this project**.
+Keymap Studio supports **firmware protocols**, rather than a guaranteed list of keyboard models. A keyboard's firmware and configuration determine whether it works; the name or PCB alone is not enough. USB workflows have been tested with simulated devices. Physical keyboard reports are identified separately below.
 
 | Keyboard or firmware | Requirements | Verification status |
 | --- | --- | --- |
 | Vial keyboards | USB Raw HID interface (usage page `0xff60`, usage `0x61`); Vial protocol 5 or 6; usable embedded keyboard definition | Protocol tested with simulated devices; physical keyboards unverified |
 | VIA keyboards | USB Raw HID interface (usage page `0xff60`, usage `0x61`); VIA protocol 12 or 13; matching manufacturer-provided VIA JSON definition | Protocol tested with simulated devices; physical keyboards unverified |
-| SAM60 H | Requires compatible Vial/VIA firmware and, for VIA, a matching JSON definition | Physical keyboard unverified; model name alone does not establish support |
+| SAM60 H | Requires compatible Vial/VIA firmware and, for VIA, a matching JSON definition | Compatibility confirmed by the project owner; firmware version, operating system and individual features not yet documented |
 | Other custom keyboards | Must meet the Vial or VIA requirements above | Physical keyboards unverified |
 | Proprietary, other protocol versions, or non-Vial/VIA firmware | Not currently supported | Not tested |
 

@@ -6,7 +6,7 @@ Open-source configurator for custom **Vial and VIA keyboards**. Remap keys and F
 
 ## Supported keyboards
 
-Vial protocol 5/6 and VIA protocol 12/13 keyboards are supported when they expose the required USB interface (VIA also needs the manufacturer's matching JSON). Compatibility depends on firmware: **no physical keyboard model, including SAM60 H, has yet been verified**. See the [keyboard compatibility table](COMPATIBILITY.md) for requirements, limitations, and how to report a test.
+Vial protocol 5/6 and VIA protocol 12/13 keyboards are supported when they expose the required USB interface (VIA also needs the manufacturer's matching JSON). The project owner confirms compatibility with the SAM60 H; the firmware version and tested features have not yet been documented. See the [keyboard compatibility table](COMPATIBILITY.md) for requirements, limitations, and how to report a test.
 
 ![Keymap Studio keymap](docs/assets/mappa.png)
 
