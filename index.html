@@ -9,6 +9,7 @@
   <script defer src="vendor/xz-decompress.js"></script>
   <script defer src="i18n.js"></script>
   <script defer src="usb.js"></script>
+  <script defer src="diagnostics.js"></script>
   <script defer src="layout.js"></script>
   <script defer src="rgb-preview.js"></script>
   <script defer src="layer-safety.js"></script>
@@ -25,9 +26,10 @@
     <div class="connection"><select id="uiLanguage" aria-label="Interface language"></select><span id="device" class="device">Modalità demo</span><button id="connect" class="primary">Collega via USB</button></div>
   </header>
   <main>
+    <div id="errorBanner" class="error-banner" role="alert" hidden><span id="errorText" data-user-content></span><button id="copyError">Copia errore</button><button id="dismissError" aria-label="Chiudi errore">×</button></div>
     <section class="intro">
       <div><p class="model">CONFIGURATORE USB · VIAL E VIA</p><h1 id="boardTitle">Tastiere custom</h1><p id="subtitle">Esplora la mappa demo o collega la tua tastiera.</p></div>
-      <div class="actions"><button id="viaDefinition">Definizione VIA</button><button id="import">Importa mappa</button><button id="export">Esporta mappa</button><input type="file" accept=".json,application/json" id="file" hidden><input type="file" accept=".json,application/json" id="viaFile" hidden></div>
+      <div class="actions"><button id="viaDefinition">Definizione VIA</button><button id="forgetVia">Dimentica JSON VIA</button><button id="import">Importa mappa</button><button id="export">Esporta mappa</button><input type="file" accept=".json,application/json" id="file" hidden><input type="file" accept=".json,application/json" id="viaFile" hidden></div>
     </section>
     <nav aria-label="Strumenti">
       <button data-tab="map" aria-pressed="true">Mappa tasti</button>
@@ -57,6 +59,11 @@
         <button id="assignFn" class="primary">Assegna Fn</button>
       </div>
       <div class="panelbottom"><span id="dirty"></span><div><button id="discard">Annulla modifiche</button> <button id="apply" class="primary">Applica</button></div></div>
+      <details class="diagnostic"><summary>Diagnostica tastiera</summary>
+        <p>Seleziona un tasto e genera un rapporto in sola lettura. Controllalo prima di condividerlo: non viene inviato automaticamente.</p>
+        <div class="actions"><button id="diagnose">Genera rapporto</button><button id="copyDiagnostic" disabled>Copia rapporto</button><button id="saveDiagnostic" disabled>Salva rapporto</button></div>
+        <textarea id="diagnosticReport" rows="12" readonly aria-label="Rapporto diagnostico" data-user-content></textarea>
+      </details>
     </section>
     <section class="panel layout-panel" id="layout" hidden>
       <div class="layout-title">

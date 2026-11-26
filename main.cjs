@@ -7,6 +7,10 @@ const path = require("node:path");
 let preferenceWrites = Promise.resolve();
 
 function registerPreferences() {
+  ipcMain.handle("app:version", (event) => {
+    if (event.senderFrame !== event.sender.mainFrame || !event.senderFrame?.url.startsWith("file://")) throw Error("Accesso non valido.");
+    return app.getVersion();
+  });
   const file = path.join(app.getPath("userData"), "appearance.json");
   const previousFile = path.join(app.getPath("appData"), "SAM60 Studio", "appearance.json");
   function validSender(event) {
@@ -88,7 +92,7 @@ function createWindow() {
       nodeIntegration: false,
       sandbox: true,
       preload: path.join(__dirname, "preload.cjs"),
-      partition: "keymap-studio",
+      partition: "persist:keymap-studio",
     },
   });
   const contents = window.webContents;

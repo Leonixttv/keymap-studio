@@ -54,6 +54,8 @@ details{font-size:13px;color:var(--muted)}
 summary{cursor:pointer;padding:8px}
 .raw input{width:105px}
 .panelbottom{border-top:1px solid var(--line);justify-content:space-between;padding:12px 22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.diagnostic{border-top:1px solid var(--line);padding:18px 22px}.diagnostic summary{cursor:pointer;font-weight:700}.diagnostic p{color:var(--muted)}.diagnostic .actions{flex-wrap:wrap}.diagnostic textarea{display:block;width:100%;min-height:160px;margin-top:12px;padding:12px;box-sizing:border-box;color:inherit;background:var(--surface, #1b2421);border:1px solid var(--line);border-radius:8px;resize:vertical;font:13px/1.5 monospace}
+.error-banner:not([hidden]){position:sticky;top:8px;z-index:20;display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:14px;margin-bottom:16px;border:1px solid #fa9c91;border-radius:12px;color:#fff;background:#522d2d;box-shadow:0 5px 18px #0006}.error-banner span{flex:1;min-width:180px;user-select:text;overflow-wrap:anywhere}
 footer{font:13px ui-monospace,monospace;color:#a9b4a6;margin:18px 1px}
 footer [data-error=true]{color:#ffb4ab}
 .toolbody{padding:0 22px 24px;display:grid;gap:24px;grid-template-columns:1fr 1fr;align-items:center}

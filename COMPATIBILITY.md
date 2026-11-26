@@ -21,8 +21,9 @@ Community [reports on Reddit](https://www.reddit.com/r/olkb/comments/1y5znwh/) a
 
 | Keyboard | Community report | Current status |
 | --- | --- | --- |
-| Keychron K2 HE ANSI | PgDn displayed as disabled on layer 2, code `0x0000`. | Unresolved on real hardware. The app now rechecks zero values with an individual read; the official JSON maps Enter to 3,12 and the adjacent key to 3,13. Please test without writing to the keyboard. |
-| YMDK YMD75 | VIA connects, but Keymap Studio did not after loading its JSON. | Unresolved; exact error, connection, OS, firmware and USB IDs are needed. Definitions must currently be loaded manually. |
+| Keychron K2 HE ANSI | PgDn displayed as disabled on layer 2, code `0x0000`. | Unresolved on real hardware: the tester reports the issue persists with the 0.6.4-rc1 Mac build, which rechecks zero values with an individual read. The official ANSI definition maps Enter to 3,12 and the adjacent key to 3,13. Avoid writing changes while investigating. |
+| YMDK YMD75 | VIA connects, but Keymap Studio rejected VIA protocol 9 on macOS via USB. | Experimental read-only support for protocol 9 is available for testing. It blocks writes and does not claim full compatibility. Hardware retesting is needed. |
+| Royal Kludge RK61, custom Vial port | Connected after restarting the app; a previously loaded VIA JSON appeared to interfere. | The local change associates VIA definitions with matching USB IDs. It needs retesting on the reported devices, including cases where IDs overlap. |
 | Inland MK75, Vial | Encoder directions not shown on the keymap; RGB and media codes displayed as hex. | RGB Matrix and common media labels improved; a shortcut opens the encoder editor when detected. Physical verification is pending; the directions are not displayed on the keymap. |
 | YMDK DK61, PI60 HSE, GK61 DS, Womier WK61 Pro, Akko 5075 VIA and Jamesdonkey/Keychron J2 | Comparison images show key labels as hex and, on some boards, an encoder not shown on the map. | Common layer-tap, mod-tap and Fn labels improved; firmware-specific codes may remain hex. Retesting on each device is needed. GK61 Pro 48 is a separate report and remains unverified. |
 

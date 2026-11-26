@@ -12,6 +12,27 @@ CONFIGURATORE USB · VIAL E VIA|USB CONFIGURATOR · VIAL AND VIA|CONFIGURADOR US
 Tastiere custom|Custom keyboards|Teclados personalizados|Claviers personnalisés|Individuelle Tastaturen
 Esplora la mappa demo o collega la tua tastiera.|Try the demo or connect your keyboard.|Prueba la demo o conecta tu teclado.|Essayez la démo ou connectez votre clavier.|Probiere die Demo aus oder verbinde deine Tastatur.
 Definizione VIA|VIA definition|Definición VIA|Définition VIA|VIA-Definition
+Copia errore|Copy error|Copiar error|Copier l’erreur|Fehler kopieren
+Chiudi errore|Dismiss error|Cerrar error|Fermer l’erreur|Fehler schließen
+Errore copiato.|Error copied.|Error copiado.|Erreur copiée.|Fehler kopiert.
+Seleziona e copia il messaggio manualmente.|Select and copy the message manually.|Selecciona y copia el mensaje manualmente.|Sélectionnez et copiez le message manuellement.|Wähle die Nachricht aus und kopiere sie manuell.
+Versione protocollo VIA non supportata:|Unsupported VIA protocol version:|Versión del protocolo VIA no compatible:|Version du protocole VIA non prise en charge :|Nicht unterstützte VIA-Protokollversion:
+Questa versione del protocollo è disponibile solo in lettura.|This protocol version is available read-only.|Esta versión del protocolo es de solo lectura.|Cette version du protocole est en lecture seule.|Diese Protokollversion ist nur lesbar.
+Sola lettura sperimentale|Experimental read-only|Solo lectura experimental|Lecture seule expérimentale|Experimenteller Lesemodus
+Protocollo 9: mappa in sola lettura sperimentale; le modifiche sono disattivate.|Protocol 9: experimental read-only keymap; changes are disabled.|Protocolo 9: mapa experimental de solo lectura; cambios desactivados.|Protocole 9 : disposition expérimentale en lecture seule ; modifications désactivées.|Protokoll 9: experimentelle schreibgeschützte Belegung; Änderungen sind deaktiviert.
+Dimentica JSON VIA|Forget VIA JSONs|Olvidar JSON VIA|Oublier les JSON VIA|VIA-JSONs vergessen
+Dimenticare tutti i JSON VIA salvati su questo computer?|Forget all VIA JSONs saved on this computer?|¿Olvidar todos los JSON VIA guardados en este ordenador?|Oublier tous les JSON VIA enregistrés sur cet ordinateur ?|Alle auf diesem Computer gespeicherten VIA-JSONs vergessen?
+Impossibile eliminare i JSON VIA salvati.|Could not remove saved VIA JSONs.|No se pudieron eliminar los JSON VIA guardados.|Impossible de supprimer les JSON VIA enregistrés.|Gespeicherte VIA-JSONs konnten nicht entfernt werden.
+JSON VIA dimenticati.|Saved VIA JSONs forgotten.|JSON VIA guardados eliminados.|JSON VIA enregistrés oubliés.|Gespeicherte VIA-JSONs vergessen.
+Diagnostica tastiera|Keyboard diagnostics|Diagnóstico del teclado|Diagnostic du clavier|Tastaturdiagnose
+Seleziona un tasto e genera un rapporto in sola lettura. Controllalo prima di condividerlo: non viene inviato automaticamente.|Select a key and generate a read-only report. Review it before sharing: it is never sent automatically.|Selecciona una tecla y genera un informe de solo lectura. Revísalo antes de compartirlo: no se envía automáticamente.|Sélectionnez une touche et générez un rapport en lecture seule. Vérifiez-le avant de le partager : il n’est jamais envoyé automatiquement.|Wähle eine Taste und erstelle einen schreibgeschützten Bericht. Prüfe ihn vor dem Teilen: Er wird nicht automatisch gesendet.
+Genera rapporto|Generate report|Generar informe|Générer le rapport|Bericht erstellen
+Copia rapporto|Copy report|Copiar informe|Copier le rapport|Bericht kopieren
+Salva rapporto|Save report|Guardar informe|Enregistrer le rapport|Bericht speichern
+Rapporto diagnostico|Diagnostic report|Informe de diagnóstico|Rapport de diagnostic|Diagnosebericht
+Rapporto copiato.|Report copied.|Informe copiado.|Rapport copié.|Bericht kopiert.
+Seleziona e copia il rapporto manualmente.|Select and copy the report manually.|Selecciona y copia el informe manualmente.|Sélectionnez et copiez le rapport manuellement.|Wähle den Bericht aus und kopiere ihn manuell.
+Definizione disponibile solo fino alla chiusura dell’app.|Definition is available only until the app closes.|La definición solo está disponible hasta cerrar la aplicación.|La définition est disponible jusqu’à la fermeture de l’application.|Die Definition ist nur bis zum Schließen der App verfügbar.
 Importa mappa|Import keymap|Importar mapa|Importer la disposition|Tastenbelegung importieren
 Esporta mappa|Export keymap|Exportar mapa|Exporter la disposition|Tastenbelegung exportieren
 Strumenti|Tools|Herramientas|Outils|Werkzeuge

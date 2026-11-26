@@ -109,7 +109,7 @@ async function applyBackup(link,board,file,current) {
 function syncBackup() {
   const online=!!state.link?.device.opened;
   $("saveBackup").disabled=!online || state.working;
-  $("restoreBackup").disabled=!online || state.working;
+  $("restoreBackup").disabled=!online || state.working || !!state.board.readOnly;
   $("backupSummary").textContent=online
     ? "Include mappa salvata, layout, macro, illuminazione, manopole e impostazioni supportate. Il ripristino richiede un firmware compatibile."
     : "Collega una tastiera compatibile per usare il backup.";

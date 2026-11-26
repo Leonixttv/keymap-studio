@@ -153,7 +153,7 @@ function updateLayoutPreview() {
   $("compareLayout").textContent=showCurrentLayout ? "Mostra anteprima" : "Mostra attuale";
   $("compareLayout").setAttribute("aria-pressed",String(showCurrentLayout));
   $("discardLayout").disabled=!isChanged || state.working;
-  $("applyLayout").disabled=!isChanged || state.working || (!!state.link && !state.link.device.opened) || !after.length;
+  $("applyLayout").disabled=!isChanged || state.working || !!state.board.readOnly || (!!state.link && !state.link.device.opened) || !after.length;
   $("applyLayout").textContent=state.link ? "Salva sulla tastiera" : "Salva layout demo";
   setPhysicalDisabled(state.working);
   renderKeys($("layoutKeyboard"),shown,changedKeys);
