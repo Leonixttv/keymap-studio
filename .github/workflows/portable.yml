@@ -18,7 +18,7 @@ jobs:
             architecture: x64
             platform: windows
           - name: macos-arm64
-            runner: macos-15
+            runner: macos-15-intel
             architecture: arm64
             platform: macos
           - name: macos-x64
