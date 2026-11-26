@@ -24,10 +24,9 @@ function fnKeycode(board, layer) {
 
 function catalog(board) {
   const modern = modernKeycodes(board);
-  const media = [[168,"Muto"],[169,"Volume +"],[170,"Volume −"],[171,"Traccia dopo"],[172,"Traccia prima"],[174,"Play/Pausa"]];
   return {
     "Tasti standard": basic.map(([code,label]) => [code,localizedLegend(code)?.main ?? label]),
-    "Multimedia": media,
+    "Multimedia": mediaKeycodes,
     "Layer": [
       ...sequence(board.layers, (i) => [fnKeycode(board,i), "Fn → L"+i+" · Tieni premuto (MO)"]),
       ...sequence(board.layers, (i) => [(modern ? 0x5260 : 0x5300)+i, "TG("+i+") · Attiva / disattiva"]),
@@ -94,6 +93,21 @@ demo.map[14] = 76;
 const state = { board:demo, link:null, saved:[...demo.map], draft:[...demo.map], layer:0,
   selected:null, working:false, tab:"map", light:null, fnLayer:1 };
 let viaDefinition=null;
+let lastConnectionAttempt=null;
+let viaDefinitions={};
+try {
+  const stored=JSON.parse(localStorage.getItem("via-definitions-v1") || "{}");
+  if (stored && typeof stored === "object" && !Array.isArray(stored)) {
+    for (const [id, definition] of Object.entries(stored)) {
+      if (!/^[0-9a-f]{4}:[0-9a-f]{4}$/.test(id) || !definition || typeof definition.name !== "string" ||
+          !["vendorId","productId"].every(field=>/^0x[0-9a-f]{1,4}$/i.test(definition[field]))) continue;
+      try {
+        parseDefinition(definition,"via");
+        if (matchingViaDefinition({[id]:definition}, {vendorId:Number(definition.vendorId),productId:Number(definition.productId)})) viaDefinitions[id]=definition;
+      } catch (_) { /* Ignore invalid stored definitions. */ }
+    }
+  }
+} catch (_) { /* The app can still use a definition for this session. */ }
 const changed = () => state.draft.reduce((list, code, i) => {
   if (code !== state.saved[i]) list.push(i);
   return list;
@@ -106,11 +120,18 @@ const make = (tag, text, className) => {
   return el;
 };
 const setStatus = (text, error = false) => {
-  $("status").textContent = text;
+  $("status").textContent = translateUi(text);
   $("status").dataset.error = String(error);
+  if (error) { $("errorText").textContent=translateUi(text); $("errorBanner").hidden=false; }
+};
+$("dismissError").onclick=()=>{ $("errorBanner").hidden=true; };
+$("copyError").onclick=async()=>{
+  try { await navigator.clipboard.writeText($("errorText").textContent); setStatus(translateUi("Errore copiato.")); }
+  catch (_) { const selection=window.getSelection(); const range=document.createRange(); range.selectNodeContents($("errorText")); selection.removeAllRanges(); selection.addRange(range); setStatus(translateUi("Seleziona e copia il messaggio manualmente.")); }
 };
 
 function labelOf(code) {
+  if (state.board.readOnly && code > 255) return hex(code);
   const named = Object.values(catalog(state.board)).flat().find(([n]) => n === code);
   if (named) return translateUi(named[1].split(" · ")[0]);
   const decoded = describeExtendedKeycode(code, modernKeycodes(state.board), value => {
@@ -196,7 +217,7 @@ function render() {
     : state.link ? "USB scollegato" : "Modalità demo";
   $("device").classList.toggle("online", online);
   $("connect").textContent = online ? "Scollega" : state.link ? "Torna alla demo" : "Collega via USB";
-  $("subtitle").textContent = state.link ? "Firmware "+(state.board.kind==="via"?"VIA":"Vial")+" · protocollo "+state.board.protocol
+  $("subtitle").textContent = state.link ? "Firmware "+(state.board.kind==="via"?"VIA":"Vial")+" · protocollo "+state.board.protocol+(state.board.readOnly ? " · "+translateUi("Sola lettura sperimentale") : "")
     : viaDefinition ? "Definizione VIA pronta · "+viaDefinition.name : "Esplora la mappa demo o collega la tua tastiera.";
   $("layers").replaceChildren(...sequence(state.board.layers, (i) => {
     const button = make("button", "L"+i);
@@ -207,6 +228,8 @@ function render() {
     return button;
   }));
   renderKeys();
+  $("openEncoder").hidden = !state.board.encoderIds.length;
+  $("openEncoder").disabled = state.working || (state.link && !online);
   const code = state.selected ? state.draft[indexOf(state.selected)] : null;
   $("selection").textContent = code === null ? "Nessun tasto selezionato" : labelOf(code)+" · "+hex(code);
   const select = $("keycode");
@@ -225,7 +248,7 @@ function render() {
   }
   select.value = [...select.options].some((o) => o.value === String(code)) ? String(code) : "";
   $("raw").value = code === null ? "" : hex(code);
-  for (const id of ["keycode","assign","assignRaw","raw"]) $(id).disabled = state.working || code === null;
+  for (const id of ["keycode","assign","assignRaw","raw"]) $(id).disabled = state.working || code === null || !!state.board.readOnly;
   const fnLayer = $("fnLayer");
   fnLayer.replaceChildren(...sequence(state.board.layers,(i)=>{
     const option=make("option","Layer "+i);
@@ -235,7 +258,7 @@ function render() {
   const existingFn = code === null ? -1 : code-fnKeycode(state.board,0);
   fnLayer.value=existingFn>=0 && existingFn<state.board.layers
     ? existingFn : Math.min(state.fnLayer,state.board.layers-1);
-  fnLayer.disabled=$("assignFn").disabled=state.working || code===null || state.board.layers<2;
+  fnLayer.disabled=$("assignFn").disabled=state.working || code===null || state.board.layers<2 || !!state.board.readOnly;
   $("fnHelp").textContent=state.board.layers<2
     ? "Il firmware espone un solo layer."
     : "Tieni premuto per usare il layer scelto. Rilascia per tornare al layer precedente.";
@@ -244,9 +267,11 @@ function render() {
     : "Nessuna modifica in sospeso";
   $("apply").textContent = state.link ? "Scrivi sulla tastiera" : "Applica alla demo";
   $("discard").disabled = !count || state.working;
-  $("apply").disabled = !count || state.working || (!!state.link && !online);
+  $("apply").disabled = !count || state.working || !!state.board.readOnly || (!!state.link && !online);
   for (const id of ["connect","export","import"]) $(id).disabled = state.working;
   $("viaDefinition").disabled=state.working || !!state.link;
+  $("forgetVia").disabled=state.working || !!state.link || !Object.keys(viaDefinitions).length;
+  $("diagnose").disabled=state.working;
   const lightAvailable = state.board === demo || (online && !!state.light);
   for (const id of ["effect","color","colorHex","brightness","speed","applyRgb"]) $(id).disabled = !lightAvailable || state.working;
   document.querySelectorAll("#swatches button").forEach(button => { button.disabled = !lightAvailable || state.working; });
@@ -320,6 +345,7 @@ $("connect").onclick = async () => {
   state.working = true;
   render();
   let device;
+  let stage="device selection";
   try {
     if (state.link) {
       if (state.link.device.opened) await state.link.device.close();
@@ -330,18 +356,23 @@ $("connect").onclick = async () => {
     }
     [device] = await navigator.hid.requestDevice({ filters:[{ usagePage:0xff60, usage:0x61 }] });
     if (!device) return setStatus("Nessuna tastiera selezionata. Verifica il cavo USB e il firmware Vial.", true);
+    stage="open USB";
     await device.open();
     setStatus("Lettura della tastiera…");
     const link = new HidTransport(device);
-    const hasDefinition=viaDefinition && device.vendorId===Number(viaDefinition.vendorId) && device.productId===Number(viaDefinition.productId);
-    if (viaDefinition && !hasDefinition) throw Error(translateUi("La definizione VIA caricata non corrisponde agli ID USB della tastiera selezionata. Controlla il JSON e riprova."));
-    const board = hasDefinition ? await loadViaBoard(link,viaDefinition) : await loadBoard(link);
+    const definition=matchingViaDefinition(viaDefinitions,device);
+    stage=definition ? "load matching VIA definition" : "detect Vial firmware";
+    const board = definition ? await loadViaBoard(link,definition) : await loadBoard(link);
+    stage="read keymap";
     const map = await readMap(link, board);
     if (!activeKeys(board).length) throw Error("La configurazione del layout non contiene tasti attivi.");
     resetMap(board, map, link);
+    lastConnectionAttempt=null;
     await loadLight();
-    setStatus("Mappa letta dalla tastiera.");
+    setStatus(board.readOnly ? "Protocollo 9: mappa in sola lettura sperimentale; le modifiche sono disattivate." : "Mappa letta dalla tastiera.");
   } catch (error) {
+    lastConnectionAttempt={stage, error:String(error?.message || "Connection failed").slice(0,300),
+      vendorId:device ? hex(device.vendorId) : null, productId:device ? hex(device.productId) : null};
     if (device?.opened) await device.close().catch(() => {});
     setStatus(error.message, true);
   } finally {
@@ -351,6 +382,14 @@ $("connect").onclick = async () => {
 };
 
 $("viaDefinition").onclick=()=>$("viaFile").click();
+$("forgetVia").onclick=()=>{
+  if (state.working || state.link || !Object.keys(viaDefinitions).length) return;
+  if (!confirm(translateUi("Dimenticare tutti i JSON VIA salvati su questo computer?"))) return;
+  try { localStorage.removeItem("via-definitions-v1"); }
+  catch (_) { return setStatus(translateUi("Impossibile eliminare i JSON VIA salvati."),true); }
+  viaDefinitions={}; viaDefinition=null; render();
+  setStatus(translateUi("JSON VIA dimenticati."));
+};
 $("viaFile").onchange=async()=>{
   const [file]=$("viaFile").files;
   $("viaFile").value="";
@@ -365,9 +404,48 @@ $("viaFile").onchange=async()=>{
     }
     parseDefinition(definition,"via");
     viaDefinition=definition;
+    const id=Number(definition.vendorId).toString(16).padStart(4,"0")+":"+Number(definition.productId).toString(16).padStart(4,"0");
+    viaDefinitions[id]=definition;
+    try { localStorage.setItem("via-definitions-v1",JSON.stringify(viaDefinitions)); }
+    catch (_) { setStatus("Definizione disponibile solo fino alla chiusura dell’app.",true); render(); return; }
     render();
     setStatus("Definizione VIA caricata. Collega la tastiera corrispondente.");
   } catch(error) {setStatus(error.message,true);}
+};
+
+$("diagnose").onclick=async()=>{
+  if (state.working) return;
+  state.working=true; render();
+  const link=state.link, board=state.board, key=state.selected, layer=state.layer;
+  try {
+    const report={format:"keymap-studio-diagnostic",version:1,
+      appVersion:await window.studioVersion?.().catch(()=>null) ?? null,
+      platform:navigator.userAgentData?.platform || navigator.platform || "unknown",
+      connection:link?.device.opened ? "connected" : "not connected",
+      lastConnectionError:lastConnectionAttempt};
+    if (link?.device.opened) {
+      report.keyboard={name:board.name || null, vendorId:hex(link.device.vendorId), productId:hex(link.device.productId),
+        firmware:board.kind, protocol:board.protocol, rows:board.rows, cols:board.cols, layers:board.layers,
+        definition:board.kind==="via" ? "local VIA JSON" : "Vial firmware"};
+      if (key) {
+        const index=(layer*board.rows+key.row)*board.cols+key.col;
+        report.selectedKey={layer,row:key.row,col:key.col,saved:hex(state.saved[index]),draft:hex(state.draft[index]),
+          reads:await diagnoseKey(link,board,layer,key)};
+      } else report.selectedKey=null;
+    }
+    $("diagnosticReport").value=JSON.stringify(report,null,2);
+    $("copyDiagnostic").disabled=$("saveDiagnostic").disabled=false;
+  } catch (error) { setStatus(String(error?.message || error),true); }
+  finally { state.working=false; render(); }
+};
+$("copyDiagnostic").onclick=async()=>{
+  try { await navigator.clipboard.writeText($("diagnosticReport").value); setStatus(translateUi("Rapporto copiato.")); }
+  catch (_) { $("diagnosticReport").focus(); $("diagnosticReport").select(); setStatus(translateUi("Seleziona e copia il rapporto manualmente."),true); }
+};
+$("saveDiagnostic").onclick=()=>{
+  const url=URL.createObjectURL(new Blob([$("diagnosticReport").value],{type:"application/json"}));
+  const download=make("a"); download.href=url; download.download="keymap-studio-diagnostic.json"; download.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
 };
 
 navigator.hid?.addEventListener("disconnect", (event) => {

@@ -7,6 +7,10 @@ const path = require("node:path");
 let preferenceWrites = Promise.resolve();
 
 function registerPreferences() {
+  ipcMain.handle("app:version", (event) => {
+    if (event.senderFrame !== event.sender.mainFrame || !event.senderFrame?.url.startsWith("file://")) throw Error("Accesso non valido.");
+    return app.getVersion();
+  });
   const file = path.join(app.getPath("userData"), "appearance.json");
   const previousFile = path.join(app.getPath("appData"), "SAM60 Studio", "appearance.json");
   function validSender(event) {
@@ -30,12 +34,13 @@ function registerPreferences() {
     if (!validSender(event) || !data ||
         !/^(us|it|uk|de|fr|es|pt|sv|dvorak|colemak)$/.test(data.language) || typeof data.shift !== "boolean" ||
         !/^(it|en|es|fr|de)$/.test(data.uiLanguage) ||
+        !/^(forest|ocean|violet|slate)$/.test(data.uiTheme) ||
         !/^(graphite|ocean|cream|violet|arcade|custom)$/.test(data.palette) ||
         !["caseColor","keyColor","accentColor"].every((key) => /^#[0-9a-f]{6}$/i.test(data[key]))) {
       throw Error("Preferenze grafiche non valide.");
     }
-    const { language, uiLanguage, shift, palette, caseColor, keyColor, accentColor } = data;
-    const safe = { language, uiLanguage, shift, palette, caseColor, keyColor, accentColor };
+    const { language, uiLanguage, uiTheme, shift, palette, caseColor, keyColor, accentColor } = data;
+    const safe = { language, uiLanguage, uiTheme, shift, palette, caseColor, keyColor, accentColor };
     preferenceWrites = preferenceWrites.catch(() => {}).then(async () => {
       await fs.mkdir(path.dirname(file), { recursive:true });
       const temporary = file+"."+process.pid+".tmp";
@@ -87,7 +92,7 @@ function createWindow() {
       nodeIntegration: false,
       sandbox: true,
       preload: path.join(__dirname, "preload.cjs"),
-      partition: "keymap-studio",
+      partition: "persist:keymap-studio",
     },
   });
   const contents = window.webContents;

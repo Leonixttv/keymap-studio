@@ -45,7 +45,8 @@ const palettes = {
   violet:["Viola","#362e52","#55446c","#e6b4ff"],
   arcade:["Arcade","#412739","#4a405a","#ff79bd"],
 };
-const defaultAppearance = {language:"us",shift:true,palette:"graphite",
+const uiThemes = ["forest","ocean","violet","slate"];
+const defaultAppearance = {language:"us",shift:true,palette:"graphite",uiTheme:"forest",
   caseColor:palettes.graphite[1],keyColor:palettes.graphite[2],accentColor:palettes.graphite[3]};
 const colorFields = ["caseColor","keyColor","accentColor"];
 let appearance = {...defaultAppearance};
@@ -96,6 +97,8 @@ function layoutKeyFingerprint(key) {
 
 function syncAppearance() {
   const css=document.documentElement.style;
+  document.documentElement.dataset.theme=appearance.uiTheme;
+  $("uiTheme").value=appearance.uiTheme;
   for (const [field,variable] of [["caseColor","--case"],["keyColor","--key-color"],["accentColor","--deck-accent"]]) {
     css.setProperty(variable,appearance[field]);
     $(field).value=appearance[field];
@@ -150,7 +153,7 @@ function updateLayoutPreview() {
   $("compareLayout").textContent=showCurrentLayout ? "Mostra anteprima" : "Mostra attuale";
   $("compareLayout").setAttribute("aria-pressed",String(showCurrentLayout));
   $("discardLayout").disabled=!isChanged || state.working;
-  $("applyLayout").disabled=!isChanged || state.working || (!!state.link && !state.link.device.opened) || !after.length;
+  $("applyLayout").disabled=!isChanged || state.working || !!state.board.readOnly || (!!state.link && !state.link.device.opened) || !after.length;
   $("applyLayout").textContent=state.link ? "Salva sulla tastiera" : "Salva layout demo";
   setPhysicalDisabled(state.working);
   renderKeys($("layoutKeyboard"),shown,changedKeys);
@@ -206,6 +209,7 @@ document.addEventListener("DOMContentLoaded",async ()=>{
   let touched=false;
   language.onchange=()=>{touched=true;appearance.language=language.value;updateAppearance();};
   $("shiftLegends").onchange=()=>{touched=true;appearance.shift=$("shiftLegends").checked;updateAppearance();};
+  $("uiTheme").onchange=()=>{touched=true;appearance.uiTheme=$("uiTheme").value;updateAppearance();};
   theme.onchange=()=>{
     touched=true;
     appearance.palette=theme.value;
@@ -263,6 +267,7 @@ document.addEventListener("DOMContentLoaded",async ()=>{
     const saved=await window.studioPreferences?.load();
     if (saved && !touched) {
       if (saved.uiLanguage) setUiLanguage(saved.uiLanguage);
+      if (uiThemes.includes(saved.uiTheme)) appearance.uiTheme=saved.uiTheme;
       if (Object.hasOwn(legendLanguages,saved.language)) appearance.language=saved.language;
       if (typeof saved.shift==="boolean") appearance.shift=saved.shift;
       if (saved.palette==="custom" || Object.hasOwn(palettes,saved.palette)) appearance.palette=saved.palette;

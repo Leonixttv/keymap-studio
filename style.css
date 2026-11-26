@@ -54,6 +54,8 @@ details{font-size:13px;color:var(--muted)}
 summary{cursor:pointer;padding:8px}
 .raw input{width:105px}
 .panelbottom{border-top:1px solid var(--line);justify-content:space-between;padding:12px 22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.diagnostic{border-top:1px solid var(--line);padding:18px 22px}.diagnostic summary{cursor:pointer;font-weight:700}.diagnostic p{color:var(--muted)}.diagnostic .actions{flex-wrap:wrap}.diagnostic textarea{display:block;width:100%;min-height:160px;margin-top:12px;padding:12px;box-sizing:border-box;color:inherit;background:var(--surface, #1b2421);border:1px solid var(--line);border-radius:8px;resize:vertical;font:13px/1.5 monospace}
+.error-banner:not([hidden]){position:sticky;top:8px;z-index:20;display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:14px;margin-bottom:16px;border:1px solid #fa9c91;border-radius:12px;color:#fff;background:#522d2d;box-shadow:0 5px 18px #0006}.error-banner span{flex:1;min-width:180px;user-select:text;overflow-wrap:anywhere}
 footer{font:13px ui-monospace,monospace;color:#a9b4a6;margin:18px 1px}
 footer [data-error=true]{color:#ffb4ab}
 .toolbody{padding:0 22px 24px;display:grid;gap:24px;grid-template-columns:1fr 1fr;align-items:center}
@@ -147,3 +149,14 @@ body[data-studio-tab=layout] .intro #subtitle{font-size:13px}
 .fn-editor p{font-size:13px;margin-top:3px}
 .fn-editor select{margin-left:auto;min-width:112px}
 @media(max-width:620px){.fn-editor{margin-inline:12px}.fn-editor>div{width:100%}.fn-editor select{margin-left:0}}
+
+/* Interface themes are independent of the keyboard preview palette. */
+:root[data-theme=ocean]{--card:#19252f;--line:#405765;--muted:#b1c7d1;--accent:#8eddf7;--surface:#233643;--page:#101b25;--glow-theme:#213f50}
+:root[data-theme=violet]{--card:#272034;--line:#514660;--muted:#c9bdd4;--accent:#dfb5ff;--surface:#362b43;--page:#1a1523;--glow-theme:#493259}
+:root[data-theme=slate]{--card:#24272d;--line:#474d57;--muted:#c0c6cf;--accent:#c9d9ed;--surface:#303640;--page:#171a20;--glow-theme:#343e4d}
+:root[data-theme=ocean] body,:root[data-theme=violet] body,:root[data-theme=slate] body{background:radial-gradient(ellipse at 75% 1%,var(--glow-theme),transparent 48%),var(--page)}
+:root[data-theme=ocean] .top,:root[data-theme=violet] .top,:root[data-theme=slate] .top{background:var(--card);border-color:var(--line)}
+:root[data-theme=ocean] button,:root[data-theme=ocean] select,:root[data-theme=ocean] input:not([type=range]),:root[data-theme=violet] button,:root[data-theme=violet] select,:root[data-theme=violet] input:not([type=range]),:root[data-theme=slate] button,:root[data-theme=slate] select,:root[data-theme=slate] input:not([type=range]){background:var(--surface)}
+:root[data-theme] button.primary{background:var(--accent);border-color:var(--accent);color:#17202a}
+:root[data-theme=ocean] nav button[aria-pressed=true],:root[data-theme=violet] nav button[aria-pressed=true],:root[data-theme=slate] nav button[aria-pressed=true],:root[data-theme=ocean] .layers [aria-pressed=true],:root[data-theme=violet] .layers [aria-pressed=true],:root[data-theme=slate] .layers [aria-pressed=true]{background:var(--surface);border-color:var(--accent);color:var(--accent)}
+:root[data-theme=ocean] .layout-control-card,:root[data-theme=violet] .layout-control-card,:root[data-theme=slate] .layout-control-card{background:var(--surface);border-color:var(--line)}

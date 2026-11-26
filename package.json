@@ -1,6 +1,6 @@
 {
   "name": "keymap-studio",
-  "version": "0.6.3",
+  "version": "0.6.5",
   "private": true,
   "description": "Open-source USB configurator for custom Vial and VIA keyboards",
   "author": "Keymap Studio contributors",
@@ -31,6 +31,7 @@
       "keycode-labels.js",
       "physical-selection.js",
       "usb.js",
+      "diagnostics.js",
       "rgb-preview.js",
       "advanced.js",
       "device-backup.js",

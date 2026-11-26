@@ -130,6 +130,8 @@ class HidTransport {
 
   request(bytes, prefix = []) {
     if (this.busy || !this.device.opened) throw Error("Ricollega la tastiera USB.");
+    if (this.readOnly && ![0x01,0x02,0x04,0x0c,0x0d,0x0e,0x11,0x12].includes(bytes[0]))
+      throw Error(translateUi("Questa versione del protocollo è disponibile solo in lettura."));
     this.busy = true;
     const payload = new Uint8Array(32);
     payload.set(bytes);
@@ -195,15 +197,20 @@ async function loadViaBoard(link,definition) {
   }
   const board=parseDefinition(definition,"via");
   const protocol=view(await link.request([1],[1])).getUint16(1);
-  if (![12,13].includes(protocol)) throw Error("In questa versione VIA richiede il protocollo 12 o 13; rilevato "+protocol+".");
+  if (![9,12,13].includes(protocol)) throw Error(translateUi("Versione protocollo VIA non supportata:")+" "+protocol+".");
+  // Legacy protocol 9 is experimental: read the map but never write until
+  // keycode ABI and the physical keyboard have been verified.
+  const readOnly=protocol===9;
+  link.readOnly=readOnly;
   const layers=(await link.request([0x11],[0x11]))[1];
   if (!layers || layers>32 || layers*board.rows*board.cols*2>65536) throw Error("Dimensione della mappa VIA non supportata.");
   const options=board.labels.length ? view(await link.request([2,2],[2,2])).getUint32(2) : 0;
-  const macroCount=(await link.request([0x0c],[0x0c]))[1];
+  const macroCount=readOnly ? 0 : (await link.request([0x0c],[0x0c]))[1];
   const uid="via-"+vendorId.toString(16).padStart(4,"0")+"-"+productId.toString(16).padStart(4,"0");
-  const lighting=definition.menus?.includes("qmk_rgblight") ? "via-rgblight"
+  const lighting=readOnly ? null : definition.menus?.includes("qmk_rgblight") ? "via-rgblight"
     : definition.menus?.includes("qmk_rgb_matrix") ? "via-matrix" : null;
-  return {...board,kind:"via",uid,protocol,layers,options,macroCount,lighting,
+  return {...board,kind:"via",uid,protocol,layers,options,macroCount,lighting,readOnly,
+    encoderIds:readOnly ? [] : board.encoderIds,
     tap:0,combo:0,override:0,repeat:0};
 }
 

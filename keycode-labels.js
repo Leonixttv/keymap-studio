@@ -1,8 +1,26 @@
 "use strict";
 
+// QMK consumer keycodes, including the values visible in the MK75 report.
+const mediaKeycodes = [[168,"Muto"],[169,"Volume +"],[170,"Volume −"],
+  [171,"Traccia dopo"],[172,"Traccia prima"],[173,"Media Stop"],[174,"Play/Pausa"],
+  [175,"Media Player"],[177,"Mail"],[178,"Calculator"],[179,"My Computer"],
+  [180,"Browser Search"],[181,"Browser Home"],[182,"Browser Back"],
+  [183,"Browser Forward"],[184,"Browser Stop"],[185,"Browser Refresh"],
+  [186,"Browser Favorites"],[187,"Media Fast Forward"],[188,"Media Rewind"],
+  [189,"Brightness +"],[190,"Brightness −"]];
+
 // Decode only documented QMK ranges. Unknown or firmware-specific values remain hex.
 function describeExtendedKeycode(code, modern, basicLabel) {
   if (!Number.isInteger(code) || code < 0 || code > 0xffff) return null;
+  if (code === (modern ? 0x7c77 : 0x5f10)) return "Fn1 (Fn3)";
+  if (code === (modern ? 0x7c78 : 0x5f11)) return "Fn2 (Fn3)";
+  // QMK's modern lighting range. Keep legacy codes as hex: their values differ.
+  if (modern) {
+    const matrix = ["RGBM On", "RGBM Off", "RGBM Toggle", "RGBM Next", "RGBM Prev",
+      "RGBM Hue+", "RGBM Hue−", "RGBM Sat+", "RGBM Sat−", "RGBM Bright+",
+      "RGBM Bright−", "RGBM Speed+", "RGBM Speed−", "RGBM Flag+", "RGBM Flag−"];
+    if (code >= 0x7840 && code < 0x7840 + matrix.length) return matrix[code - 0x7840];
+  }
   const inner = basicLabel(code & 0xff);
   const mods = bits => {
     const side = bits & 0x10 ? "R" : "L";
@@ -32,7 +50,8 @@ function describeExtendedKeycode(code, modern, basicLabel) {
   return null;
 }
 function compactKeyLabel(code, label, width) {
+  if (code === 1) return "▽";
   if (code === 42 && width <= 1.25) return "Bksp";
   return label;
 }
-if (typeof module !== "undefined") module.exports = { describeExtendedKeycode, compactKeyLabel };
+if (typeof module !== "undefined") module.exports = { describeExtendedKeycode, compactKeyLabel, mediaKeycodes };
