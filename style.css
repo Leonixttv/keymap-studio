@@ -120,7 +120,7 @@ body #glow{aspect-ratio:auto;box-shadow:none}
 .key[aria-pressed=true] span.cap,.key[aria-pressed=true] span.subcap,.key[data-layout-changed] span.cap,.key[data-layout-changed] span.subcap{background:var(--deck-accent);border-color:var(--deck-accent)}
 .key[data-layout-changed]{color:var(--accent-ink)}
 .key[data-layout-changed] span.cap{box-shadow:0 4px 0 color-mix(in srgb,var(--deck-accent) 55%,black),0 0 13px color-mix(in srgb,var(--deck-accent) 35%,transparent)}
-.key .legend{display:inline-grid;align-content:center;justify-items:center;line-height:1.12}
+.key .legend{display:inline-grid;align-content:center;justify-items:center;line-height:1.12;max-width:96%;overflow-wrap:anywhere}
 .key .legend-shift{font-size:.87em;opacity:.79;grid-row:1}
 #layoutKeyboard .key{display:grid;place-content:center;text-align:center;pointer-events:none}
 #layoutKeyboard .legend{pointer-events:none}

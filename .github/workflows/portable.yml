@@ -1,4 +1,4 @@
-﻿name: Portable builds
+name: Portable builds
 on:
   push:
     branches: [international]
@@ -47,7 +47,7 @@ jobs:
         run: |
           npm run build:portable
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          Move-Item dist/Keymap-Studio-Portable.exe dist/Keymap-Studio-0.6.1-Windows-x64.exe
+          Move-Item dist/Keymap-Studio-Portable.exe dist/Keymap-Studio-0.6.2-Windows-x64.exe
       - name: Build macOS app archive
         if: matrix.platform == 'macos'
         run: npm run build:mac -- --${{ matrix.architecture }}
@@ -60,7 +60,7 @@ jobs:
         with:
           name: keymap-${{ matrix.name }}
           path: |
-            dist/Keymap-Studio-0.6.1-*.exe
-            dist/Keymap-Studio-0.6.1-*.zip
-            dist/Keymap-Studio-0.6.1-*.tar.gz
+            dist/Keymap-Studio-0.6.2-*.exe
+            dist/Keymap-Studio-0.6.2-*.zip
+            dist/Keymap-Studio-0.6.2-*.tar.gz
           if-no-files-found: error

@@ -106,6 +106,15 @@ Termina test|Stop test|Terminar prueba|Arrêter le test|Test beenden
 Test della matrice|Matrix test|Prueba de matriz|Test matriciel|Matrixtest
 Premi un tasto per iniziare.|Press a key to begin.|Pulsa una tecla para empezar.|Appuyez sur une touche pour commencer.|Drücke eine Taste, um zu beginnen.
 Pronto.|Ready.|Listo.|Prêt.|Bereit.
+Ctrl sinistro|Left Ctrl|Ctrl izquierdo|Ctrl gauche|Linke Strg
+Shift sinistro|Left Shift|Mayús izquierda|Maj gauche|Linke Umschalttaste
+Alt sinistro|Left Alt|Alt izquierdo|Alt gauche|Linke Alt
+GUI sinistro|Left GUI|GUI izquierda|GUI gauche|Linke GUI
+Ctrl destro|Right Ctrl|Ctrl derecho|Ctrl droit|Rechte Strg
+Shift destro|Right Shift|Mayús derecha|Maj droite|Rechte Umschalttaste
+Alt destro|Right Alt|Alt derecho|Alt droit|Rechte Alt
+GUI destro|Right GUI|GUI derecha|GUI droite|Rechte GUI
+La definizione VIA caricata non corrisponde agli ID USB della tastiera selezionata. Controlla il JSON e riprova.|The loaded VIA definition does not match the selected keyboard's USB IDs. Check the JSON and try again.|La definición VIA no coincide con los ID USB del teclado. Comprueba el JSON y vuelve a intentarlo.|La définition VIA ne correspond pas aux identifiants USB du clavier. Vérifiez le JSON et réessayez.|Die VIA-Definition passt nicht zu den USB-IDs der Tastatur. Prüfe die JSON-Datei und versuche es erneut.
 `.trim().split("\n").map(line=>{const [it,...values]=line.split("|");return [it,values];}));
 const originalText=new WeakMap();
 const columns={en:0,es:1,fr:2,de:3};

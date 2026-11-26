@@ -11,8 +11,8 @@ const basic = [
   ...sequence(12, (i) => [58+i, "F"+(i+1)]),
   [70,"Stamp"],[71,"Bloc Scorr"],[72,"Pausa"],[73,"Ins"],[74,"Home"],[75,"Pg↑"],
   [76,"Canc"],[77,"End"],[78,"Pg↓"],[79,"→"],[80,"←"],[81,"↓"],[82,"↑"],
-  [101,"Menu"],[224,"Ctrl Sx"],[225,"Shift Sx"],[226,"Alt Sx"],[227,"Win Sx"],
-  [228,"Ctrl Dx"],[229,"Shift Dx"],[230,"Alt Gr"],[231,"Win Dx"],
+  [101,"Menu"],[224,"Ctrl sinistro"],[225,"Shift sinistro"],[226,"Alt sinistro"],[227,"GUI sinistro"],
+  [228,"Ctrl destro"],[229,"Shift destro"],[230,"Alt destro"],[231,"GUI destro"],
 ];
 function modernKeycodes(board) {
   return board.protocol === 6 || board.kind === "via";
@@ -112,7 +112,12 @@ const setStatus = (text, error = false) => {
 
 function labelOf(code) {
   const named = Object.values(catalog(state.board)).flat().find(([n]) => n === code);
-  return named ? named[1].split(" · ")[0] : hex(code);
+  if (named) return translateUi(named[1].split(" · ")[0]);
+  const decoded = describeExtendedKeycode(code, modernKeycodes(state.board), value => {
+    const entry = basic.find(([number]) => number === value);
+    return entry ? (localizedLegend(value)?.main ?? translateUi(entry[1])) : null;
+  });
+  return decoded ?? hex(code);
 }
 
 function renderKeys(host = $("keyboard"), keys = activeKeys(state.board), highlighting = null) {
@@ -155,7 +160,7 @@ function renderKeys(host = $("keyboard"), keys = activeKeys(state.board), highli
       button.append(subcap);
     }
     const legend = make("span", undefined, "legend");
-    legend.append(make("span", name, "legend-main"));
+    legend.append(make("span", compactKeyLabel(code, name, key.width), "legend-main"));
     const shifted = localizedLegend(code)?.shift;
     if (shifted && shifted !== name) {
       legend.append(make("span", shifted, "legend-shift"));
@@ -329,6 +334,7 @@ $("connect").onclick = async () => {
     setStatus("Lettura della tastiera…");
     const link = new HidTransport(device);
     const hasDefinition=viaDefinition && device.vendorId===Number(viaDefinition.vendorId) && device.productId===Number(viaDefinition.productId);
+    if (viaDefinition && !hasDefinition) throw Error(translateUi("La definizione VIA caricata non corrisponde agli ID USB della tastiera selezionata. Controlla il JSON e riprova."));
     const board = hasDefinition ? await loadViaBoard(link,viaDefinition) : await loadBoard(link);
     const map = await readMap(link, board);
     if (!activeKeys(board).length) throw Error("La configurazione del layout non contiene tasti attivi.");
