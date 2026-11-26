@@ -216,7 +216,21 @@ async function readMap(link, board) {
     const reply = await link.request(cmd, cmd);
     map.set(reply.subarray(4, 4 + count), offset);
   }
-  return Array.from({ length: size / 2 }, (_, i) => view(map).getUint16(i * 2));
+  const codes = Array.from({ length: size / 2 }, (_, i) => view(map).getUint16(i * 2));
+  // A zero from the bulk response can be a genuine KC_NO or a read mismatch.
+  // Verify populated physical positions through the standard single-key command.
+  const positions = new Set(board.keys.map(key => key.row * board.cols + key.col));
+  const area = board.rows * board.cols;
+  for (let layer = 0; layer < board.layers; layer++) {
+    for (const position of positions) {
+      const index = layer * area + position;
+      if (codes[index] !== 0) continue;
+      const cmd = [0x04, layer, Math.floor(position / board.cols), position % board.cols];
+      const reply = await link.request(cmd, cmd);
+      codes[index] = view(reply).getUint16(4);
+    }
+  }
+  return codes;
 }
 
 async function writeKey(link, board, index, code, previous) {

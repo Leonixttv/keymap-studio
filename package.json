@@ -1,6 +1,6 @@
 {
   "name": "keymap-studio",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "private": true,
   "description": "Open-source USB configurator for custom Vial and VIA keyboards",
   "author": "Keymap Studio contributors",

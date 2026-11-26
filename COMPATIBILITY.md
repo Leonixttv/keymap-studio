@@ -10,8 +10,8 @@ Keymap Studio supports **firmware protocols**, rather than a guaranteed list of 
 | YMDK DK61 (Minila) | Vial firmware | [Community report](https://www.reddit.com/r/olkb/comments/1y5znwh/comment/19t82e01uk74y/): layout displayed; key labels need improvement. Other features not verified |
 | 1upKeyboards PI60 HSE | Vial firmware | [Community comparison](https://www.reddit.com/r/olkb/comments/1y5znwh/comment/19t82kr4mlhr4/); firmware version and tested features not documented |
 | Womier WK61 Pro | VIA firmware | [Community comparison](https://www.reddit.com/r/olkb/comments/1y5znwh/comment/19t830465saw5/); firmware version and tested features not documented |
-| Keychron K2 HE | Firmware and protocol version not documented | [Community report](https://www.reddit.com/r/olkb/comments/1y5znwh/comment/19t83g93dxbtx/): a PgDn key appeared disabled; under investigation |
-| GK61 Pro 48 | VIA JSON and firmware details requested | [Community report](https://www.reddit.com/r/olkb/comments/1y5znwh/comment/19t82sonfrp5t/): connection failed; not yet confirmed compatible |
+| Keychron K2 HE | Firmware and protocol version not documented | [Community report](https://www.reddit.com/r/olkb/comments/1y5znwh/comment/19t83g93dxbtx/): PgDn works but appeared disabled; under investigation |
+| GK61 DS / Pro 48 | Matching VIA JSON; firmware version not documented | [Community follow-up](https://www.reddit.com/r/olkb/comments/1y5znwh/comment/19t88tdmsq5nl/): connected after using the correct VIA JSON; other features not verified |
 | Other custom keyboards | Must meet the Vial or VIA requirements above | Physical keyboards unverified |
 | Proprietary, other protocol versions, or non-Vial/VIA firmware | Not currently supported | Not tested |
 
