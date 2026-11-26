@@ -16,6 +16,7 @@ Importa mappa|Import keymap|Importar mapa|Importer la disposition|Tastenbelegung
 Esporta mappa|Export keymap|Exportar mapa|Exporter la disposition|Tastenbelegung exportieren
 Strumenti|Tools|Herramientas|Outils|Werkzeuge
 Mappa tasti|Keymap|Mapa de teclas|Affectation des touches|Tastenbelegung
+Configura manopole|Configure encoders|Configurar perillas|Configurer les encodeurs|Drehgeber konfigurieren
 Layout|Layout|Distribución|Disposition|Layout
 Illuminazione|Lighting|Iluminación|Éclairage|Beleuchtung
 Funzioni avanzate|Advanced|Funciones avanzadas|Fonctions avancées|Erweitert
@@ -48,6 +49,11 @@ Invio|Enter|Intro|Entrée|Eingabe
 Spazio|Space|Espacio|Espace|Leertaste
 Canc|Delete|Supr|Suppr|Entf
 Layout e aspetto|Layout and appearance|Distribución y aspecto|Disposition et apparence|Layout und Darstellung
+Tema dell’app|App theme|Tema de la aplicación|Thème de l’application|App-Design
+Foresta|Forest|Bosque|Forêt|Wald
+Oceano|Ocean|Océano|Océan|Ozean
+Viola|Violet|Violeta|Violet|Violett
+Grafite|Graphite|Grafito|Graphite|Graphit
 Modifica la disposizione e guarda il risultato sulla tastiera qui sotto.|Change the layout and preview the result below.|Cambia la distribución y revisa el resultado abajo.|Modifiez la disposition et visualisez le résultat ci-dessous.|Ändere das Layout und sieh dir unten die Vorschau an.
 Disposizione fisica|Physical layout|Distribución física|Disposition physique|Physisches Layout
 Legende|Key legends|Leyendas|Légendes|Tastenbeschriftung

@@ -40,6 +40,7 @@
     <section class="panel" id="map">
       <div class="paneltop"><div><h2>Mappa tasti</h2><p>Seleziona un tasto, poi scegli la sua nuova funzione.</p></div><div id="layers" class="layers" aria-label="Layer"></div></div>
       <div id="keyboard" class="keyboard" aria-label="Layout della tastiera"></div>
+      <div class="actions"><button id="openEncoder" hidden>Configura manopole</button></div>
       <div class="physical-hint">
         <label><input id="physicalSelect" type="checkbox" checked> Seleziona premendo un tasto</label>
         <span id="physicalHint" role="status"></span>
@@ -76,6 +77,8 @@
         </div>
         <div class="layout-control-card">
           <h3>Aspetto</h3>
+          <label for="uiTheme">Tema dell’app</label>
+          <select id="uiTheme"><option value="forest">Foresta</option><option value="ocean">Oceano</option><option value="violet">Viola</option><option value="slate">Grafite</option></select>
           <label for="layoutTheme">Palette</label>
           <select id="layoutTheme"></select>
           <div class="theme-colors">
