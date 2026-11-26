@@ -26,6 +26,7 @@
       "index.html",
       "layout.js",
       "app.js",
+      "layer-safety.js",
       "physical-selection.js",
       "usb.js",
       "rgb-preview.js",

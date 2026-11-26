@@ -280,6 +280,17 @@ $("discard").onclick = () => {
 $("apply").onclick = async () => {
   const pending = changed(), link = state.link;
   if (!pending.length) return;
+  const lost = removedDirectLayerAccess(state.board, activeKeys(state.board), state.saved, state.draft);
+  if (lost.length) {
+    const message = {
+      it: "Stai rimuovendo l'ultimo tasto MO o TG sul layer 0 per i layer: {layers}. Potresti non riuscire più a raggiungerli. Altri accessi personalizzati non vengono verificati. Continuare?",
+      en: "You are removing the last MO or TG key on layer 0 for layers: {layers}. You may no longer be able to reach them. Other custom access methods are not checked. Continue?",
+      es: "Estás eliminando la última tecla MO o TG de la capa 0 para las capas: {layers}. Es posible que ya no puedas acceder a ellas. No se comprueban otros accesos personalizados. ¿Continuar?",
+      fr: "Vous supprimez la dernière touche MO ou TG de la couche 0 pour les couches : {layers}. Elles pourraient devenir inaccessibles. Les autres accès personnalisés ne sont pas vérifiés. Continuer ?",
+      de: "Du entfernst die letzte MO- oder TG-Taste auf Ebene 0 für die Ebenen: {layers}. Sie sind danach möglicherweise nicht mehr erreichbar. Andere eigene Zugänge werden nicht geprüft. Fortfahren?"
+    };
+    if (!confirm((message[uiLanguage] || message.en).replace("{layers}", lost.join(", ")))) return;
+  }
   state.working = true;
   render();
   let count = 0;
