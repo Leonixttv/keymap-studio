@@ -24,10 +24,9 @@ function fnKeycode(board, layer) {
 
 function catalog(board) {
   const modern = modernKeycodes(board);
-  const media = [[168,"Muto"],[169,"Volume +"],[170,"Volume −"],[171,"Traccia dopo"],[172,"Traccia prima"],[174,"Play/Pausa"]];
   return {
     "Tasti standard": basic.map(([code,label]) => [code,localizedLegend(code)?.main ?? label]),
-    "Multimedia": media,
+    "Multimedia": mediaKeycodes,
     "Layer": [
       ...sequence(board.layers, (i) => [fnKeycode(board,i), "Fn → L"+i+" · Tieni premuto (MO)"]),
       ...sequence(board.layers, (i) => [(modern ? 0x5260 : 0x5300)+i, "TG("+i+") · Attiva / disattiva"]),
@@ -207,6 +206,8 @@ function render() {
     return button;
   }));
   renderKeys();
+  $("openEncoder").hidden = !state.board.encoderIds.length;
+  $("openEncoder").disabled = state.working || (state.link && !online);
   const code = state.selected ? state.draft[indexOf(state.selected)] : null;
   $("selection").textContent = code === null ? "Nessun tasto selezionato" : labelOf(code)+" · "+hex(code);
   const select = $("keycode");

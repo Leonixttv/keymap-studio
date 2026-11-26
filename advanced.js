@@ -516,6 +516,12 @@ async function openFeature(slot=0) {
 }
 
 $("feature").onchange=()=>void openFeature();
+$("openEncoder").onclick=()=>{
+  if (state.working || !state.board.encoderIds.length) return;
+  $("feature").value="encoder";
+  void openFeature(state.layer * state.board.encoderIds.length);
+  document.querySelector('[data-tab="advanced"]').click();
+};
 $("cancelUnlock").onclick=()=>{cancelUnlock=true;};
 $("saveFeature").onclick=async()=>{
   if(!featureValue || state.working) return;
