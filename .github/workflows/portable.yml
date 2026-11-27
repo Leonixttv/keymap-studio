@@ -1,7 +1,7 @@
 name: Portable builds
 on:
   push:
-    branches: [international]
+    branches: [main, international]
   workflow_dispatch:
 
 permissions:

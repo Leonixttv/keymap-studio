@@ -39,3 +39,10 @@ test("recognise the media and brightness codes from the MK75 layer", () => {
   assert.equal(labels.get(0xb2), "Calculator");
   assert.equal(labels.get(0xaf), "Media Player");
 });
+
+test("encode Layer Tap using the selected layer and standard key",()=>{
+  const {layerTapKeycode}=require("../keycode-labels");
+  assert.equal(layerTapKeycode(1,43),0x412b);
+  assert.equal(layerTapKeycode(15,44),0x4f2c);
+  for (const [layer,key] of [[16,43],[-1,43],[1,256],[1,3]]) assert.throws(()=>layerTapKeycode(layer,key));
+});

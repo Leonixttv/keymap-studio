@@ -49,9 +49,13 @@ function describeExtendedKeycode(code, modern, basicLabel) {
   }
   return null;
 }
+function layerTapKeycode(layer, key) {
+  if (!Number.isInteger(layer) || layer < 0 || layer > 15 || !Number.isInteger(key) || key < 4 || key > 255) throw Error("Invalid Layer Tap parameters");
+  return 0x4000 | (layer << 8) | key;
+}
 function compactKeyLabel(code, label, width) {
   if (code === 1) return "▽";
   if (code === 42 && width <= 1.25) return "Bksp";
   return label;
 }
-if (typeof module !== "undefined") module.exports = { describeExtendedKeycode, compactKeyLabel, mediaKeycodes };
+if (typeof module !== "undefined") module.exports = { describeExtendedKeycode, compactKeyLabel, mediaKeycodes, layerTapKeycode };

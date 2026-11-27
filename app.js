@@ -24,6 +24,7 @@ function fnKeycode(board, layer) {
 
 function catalog(board) {
   const modern = modernKeycodes(board);
+  if (board.basicWritesOnly) return {"Tasti standard": basic.map(([code,label]) => [code,localizedLegend(code)?.main ?? label]), "Speciali": [[0,"Disabilitato"],[1,"Trasparente"]]};
   return {
     "Tasti standard": basic.map(([code,label]) => [code,localizedLegend(code)?.main ?? label]),
     "Multimedia": mediaKeycodes,
@@ -91,7 +92,7 @@ demo.map[4*demo.cols+9]=44;
 demo.labels = [["Backspace","Intero","Diviso"],["Invio e Shift sinistro","ANSI","ISO"],["Barra spaziatrice","Intera","Divisa"]];
 demo.map[14] = 76;
 const state = { board:demo, link:null, saved:[...demo.map], draft:[...demo.map], layer:0,
-  selected:null, working:false, tab:"map", light:null, fnLayer:1 };
+  selected:null, working:false, tab:"map", light:null, fnLayer:1, tapLayer:1, tapKey:43 };
 let viaDefinition=null;
 let lastConnectionAttempt=null;
 let viaDefinitions={};
@@ -217,7 +218,7 @@ function render() {
     : state.link ? "USB scollegato" : "Modalità demo";
   $("device").classList.toggle("online", online);
   $("connect").textContent = online ? "Scollega" : state.link ? "Torna alla demo" : "Collega via USB";
-  $("subtitle").textContent = state.link ? "Firmware "+(state.board.kind==="via"?"VIA":"Vial")+" · protocollo "+state.board.protocol+(state.board.readOnly ? " · "+translateUi("Sola lettura sperimentale") : "")
+  $("subtitle").textContent = state.link ? "Firmware "+(state.board.kind==="via"?"VIA":"Vial")+" · protocollo "+state.board.protocol+(state.board.readOnly ? " · "+translateUi(state.board.basicWritesOnly ? "Modifica tasti base sperimentale" : "Sola lettura sperimentale") : "")
     : viaDefinition ? "Definizione VIA pronta · "+viaDefinition.name : "Esplora la mappa demo o collega la tua tastiera.";
   $("layers").replaceChildren(...sequence(state.board.layers, (i) => {
     const button = make("button", "L"+i);
@@ -248,7 +249,9 @@ function render() {
   }
   select.value = [...select.options].some((o) => o.value === String(code)) ? String(code) : "";
   $("raw").value = code === null ? "" : hex(code);
-  for (const id of ["keycode","assign","assignRaw","raw"]) $(id).disabled = state.working || code === null || !!state.board.readOnly;
+  const canEditBasic = state.board.basicWritesOnly && code !== null && via9SafeKeycode(state.saved[indexOf(state.selected)]);
+  for (const id of ["keycode","assign"]) $(id).disabled = state.working || code === null || (!!state.board.readOnly && !canEditBasic);
+  for (const id of ["assignRaw","raw"]) $(id).disabled = state.working || code === null || !!state.board.readOnly;
   const fnLayer = $("fnLayer");
   fnLayer.replaceChildren(...sequence(state.board.layers,(i)=>{
     const option=make("option","Layer "+i);
@@ -262,15 +265,27 @@ function render() {
   $("fnHelp").textContent=state.board.layers<2
     ? "Il firmware espone un solo layer."
     : "Tieni premuto per usare il layer scelto. Rilascia per tornare al layer precedente.";
+  const tapLayers = Math.min(state.board.layers, 16);
+  $("tapLayer").replaceChildren(...sequence(tapLayers, i => { const option=make("option", "Layer "+i); option.value=i; return option; }));
+  $("tapLayer").value=Math.min(state.tapLayer,tapLayers-1);
+  $("tapKey").replaceChildren(...basic.map(([value,label]) => { const option=make("option",localizedLegend(value)?.main ?? translateUi(label)); option.value=value; return option; }));
+  $("tapKey").value=state.tapKey;
+  for (const id of ["tapLayer","tapKey","assignLayerTap"]) $(id).disabled=state.working || code===null || state.board.layers<2 || !!state.board.readOnly;
   const count = changed().length;
   $("dirty").textContent = count ? count+(count === 1 ? " modifica da applicare" : " modifiche da applicare")
     : "Nessuna modifica in sospeso";
   $("apply").textContent = state.link ? "Scrivi sulla tastiera" : "Applica alla demo";
   $("discard").disabled = !count || state.working;
-  $("apply").disabled = !count || state.working || !!state.board.readOnly || (!!state.link && !online);
+  $("apply").disabled = !count || state.working || (!!state.board.readOnly && !state.board.basicWritesOnly) || (!!state.link && !online);
   for (const id of ["connect","export","import"]) $(id).disabled = state.working;
+  if (state.board.basicWritesOnly) $("import").disabled=true;
   $("viaDefinition").disabled=state.working || !!state.link;
   $("forgetVia").disabled=state.working || !!state.link || !Object.keys(viaDefinitions).length;
+  const savedDefinitions=Object.entries(viaDefinitions).sort(([a],[b])=>a.localeCompare(b));
+  $("viaSavedList").replaceChildren(...(savedDefinitions.length
+    ? savedDefinitions.map(([id, definition])=>make("li",definition.name+" · "+id.toUpperCase()))
+    : [make("li",translateUi("Nessuna definizione VIA salvata."))]));
+  $("readOnlyNotice").hidden=!state.board.readOnly;
   $("diagnose").disabled=state.working;
   const lightAvailable = state.board === demo || (online && !!state.light);
   for (const id of ["effect","color","colorHex","brightness","speed","applyRgb"]) $(id).disabled = !lightAvailable || state.working;
@@ -284,6 +299,7 @@ function resetMap(board, map, link) {
 
 function assign(code) {
   if (!state.selected || state.working) return;
+  if (state.board.readOnly && (!state.board.basicWritesOnly || !via9SafeKeycode(code) || !via9SafeKeycode(state.saved[indexOf(state.selected)]))) return;
   state.draft[indexOf(state.selected)] = code;
   render();
   setStatus("Assegnato "+labelOf(code)+".");
@@ -296,6 +312,12 @@ $("assignFn").onclick = () => {
   if (state.board.layers<2 || !Number.isInteger(target) || target<0 || target>=state.board.layers) return;
   state.fnLayer=target;
   assign(fnKeycode(state.board,target));
+};
+$("tapLayer").onchange = () => { state.tapLayer=Number($("tapLayer").value); };
+$("tapKey").onchange = () => { state.tapKey=Number($("tapKey").value); };
+$("assignLayerTap").onclick = () => {
+  if (state.board.readOnly || state.board.layers<2 || state.tapLayer>=Math.min(state.board.layers,16) || !basic.some(([code])=>code===state.tapKey)) return;
+  assign(layerTapKeycode(state.tapLayer,state.tapKey));
 };
 $("assignRaw").onclick = () => {
   const input = $("raw").value.trim();
@@ -310,6 +332,7 @@ $("discard").onclick = () => {
 $("apply").onclick = async () => {
   const pending = changed(), link = state.link;
   if (!pending.length) return;
+  if (state.board.basicWritesOnly && pending.some(i => !via9SafeKeycode(state.saved[i]) || !via9SafeKeycode(state.draft[i]))) return setStatus("VIA 9: puoi modificare solo i tasti standard.", true);
   const lost = removedDirectLayerAccess(state.board, activeKeys(state.board), state.saved, state.draft);
   if (lost.length) {
     const message = {
@@ -369,7 +392,7 @@ $("connect").onclick = async () => {
     resetMap(board, map, link);
     lastConnectionAttempt=null;
     await loadLight();
-    setStatus(board.readOnly ? "Protocollo 9: mappa in sola lettura sperimentale; le modifiche sono disattivate." : "Mappa letta dalla tastiera.");
+    setStatus(board.readOnly ? "Protocollo 9: modifica sperimentale dei tasti standard disponibile." : "Mappa letta dalla tastiera.");
   } catch (error) {
     lastConnectionAttempt={stage, error:String(error?.message || "Connection failed").slice(0,300),
       vendorId:device ? hex(device.vendorId) : null, productId:device ? hex(device.productId) : null};

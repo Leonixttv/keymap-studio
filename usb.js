@@ -117,6 +117,10 @@ async function unpackDefinition(data) {
   }
 }
 
+function via9SafeKeycode(code) {
+  return Number.isInteger(code) && ((code >= 4 && code <= 0x73) || (code >= 0xe0 && code <= 0xe7) || code === 0 || code === 1);
+}
+
 class HidTransport {
   constructor(device) {
     this.device = device;
@@ -130,7 +134,8 @@ class HidTransport {
 
   request(bytes, prefix = []) {
     if (this.busy || !this.device.opened) throw Error("Ricollega la tastiera USB.");
-    if (this.readOnly && ![0x01,0x02,0x04,0x0c,0x0d,0x0e,0x11,0x12].includes(bytes[0]))
+    if (this.readOnly && ![0x01,0x02,0x04,0x0c,0x0d,0x0e,0x11,0x12].includes(bytes[0]) &&
+        !(this.basicWritesOnly && bytes[0] === 0x05 && bytes.length === 6 && via9SafeKeycode((bytes[4] << 8) | bytes[5])))
       throw Error(translateUi("Questa versione del protocollo è disponibile solo in lettura."));
     this.busy = true;
     const payload = new Uint8Array(32);
@@ -198,10 +203,10 @@ async function loadViaBoard(link,definition) {
   const board=parseDefinition(definition,"via");
   const protocol=view(await link.request([1],[1])).getUint16(1);
   if (![9,12,13].includes(protocol)) throw Error(translateUi("Versione protocollo VIA non supportata:")+" "+protocol+".");
-  // Legacy protocol 9 is experimental: read the map but never write until
-  // keycode ABI and the physical keyboard have been verified.
+  // Protocol 9 permits experimental basic key edits; advanced writes remain blocked.
   const readOnly=protocol===9;
   link.readOnly=readOnly;
+  link.basicWritesOnly=readOnly;
   const layers=(await link.request([0x11],[0x11]))[1];
   if (!layers || layers>32 || layers*board.rows*board.cols*2>65536) throw Error("Dimensione della mappa VIA non supportata.");
   const options=board.labels.length ? view(await link.request([2,2],[2,2])).getUint32(2) : 0;
@@ -209,7 +214,7 @@ async function loadViaBoard(link,definition) {
   const uid="via-"+vendorId.toString(16).padStart(4,"0")+"-"+productId.toString(16).padStart(4,"0");
   const lighting=readOnly ? null : definition.menus?.includes("qmk_rgblight") ? "via-rgblight"
     : definition.menus?.includes("qmk_rgb_matrix") ? "via-matrix" : null;
-  return {...board,kind:"via",uid,protocol,layers,options,macroCount,lighting,readOnly,
+  return {...board,kind:"via",uid,protocol,layers,options,macroCount,lighting,readOnly,basicWritesOnly:readOnly,
     encoderIds:readOnly ? [] : board.encoderIds,
     tap:0,combo:0,override:0,repeat:0};
 }
@@ -241,6 +246,8 @@ async function readMap(link, board) {
 }
 
 async function writeKey(link, board, index, code, previous) {
+  if (board.basicWritesOnly && (!via9SafeKeycode(code) || !via9SafeKeycode(previous)))
+    throw Error("VIA 9: puoi modificare solo i tasti standard.");
   const area = board.rows * board.cols;
   const address = [Math.floor(index / area), Math.floor(index % area / board.cols), index % board.cols];
   const reply = await link.request([0x04, ...address], [0x04, ...address]);

@@ -12,12 +12,24 @@ CONFIGURATORE USB · VIAL E VIA|USB CONFIGURATOR · VIAL AND VIA|CONFIGURADOR US
 Tastiere custom|Custom keyboards|Teclados personalizados|Claviers personnalisés|Individuelle Tastaturen
 Esplora la mappa demo o collega la tua tastiera.|Try the demo or connect your keyboard.|Prueba la demo o conecta tu teclado.|Essayez la démo ou connectez votre clavier.|Probiere die Demo aus oder verbinde deine Tastatur.
 Definizione VIA|VIA definition|Definición VIA|Définition VIA|VIA-Definition
+Definizioni VIA salvate|Saved VIA definitions|Definiciones VIA guardadas|Définitions VIA enregistrées|Gespeicherte VIA-Definitionen
+Le definizioni sono associate agli identificativi USB e conservate su questo computer.|Definitions are matched by USB IDs and stored on this computer.|Las definiciones se asocian a los ID USB y se guardan en este ordenador.|Les définitions sont associées aux identifiants USB et enregistrées sur cet ordinateur.|Definitionen werden USB-IDs zugeordnet und auf diesem Computer gespeichert.
+Nessuna definizione VIA salvata.|No saved VIA definitions.|No hay definiciones VIA guardadas.|Aucune définition VIA enregistrée.|Keine VIA-Definitionen gespeichert.
+Protocollo VIA 9: modifica sperimentale dei tasti standard. Fn, macro, layout e altre funzioni avanzate non sono ancora modificabili.|VIA protocol 9: experimental basic key editing. Fn, macros, layouts and other advanced features cannot yet be edited.|Protocolo VIA 9: edición experimental de teclas básicas. Fn, macros, disposición y funciones avanzadas aún no se pueden editar.|Protocole VIA 9 : modification expérimentale des touches standard. Fn, macros, disposition et fonctions avancées ne sont pas encore modifiables.|VIA-Protokoll 9: experimentelle Bearbeitung von Standardtasten. Fn, Makros, Layout und erweiterte Funktionen sind noch nicht bearbeitbar.
 Copia errore|Copy error|Copiar error|Copier l’erreur|Fehler kopieren
 Chiudi errore|Dismiss error|Cerrar error|Fermer l’erreur|Fehler schließen
 Errore copiato.|Error copied.|Error copiado.|Erreur copiée.|Fehler kopiert.
 Seleziona e copia il messaggio manualmente.|Select and copy the message manually.|Selecciona y copia el mensaje manualmente.|Sélectionnez et copiez le message manuellement.|Wähle die Nachricht aus und kopiere sie manuell.
 Versione protocollo VIA non supportata:|Unsupported VIA protocol version:|Versión del protocolo VIA no compatible:|Version du protocole VIA non prise en charge :|Nicht unterstützte VIA-Protokollversion:
 Questa versione del protocollo è disponibile solo in lettura.|This protocol version is available read-only.|Esta versión del protocolo es de solo lectura.|Cette version du protocole est en lecture seule.|Diese Protokollversion ist nur lesbar.
+Modifica tasti base sperimentale|Experimental basic key editing|Edición experimental de teclas básicas|Modification expérimentale des touches standard|Experimentelle Bearbeitung von Standardtasten
+Protocollo 9: modifica sperimentale dei tasti standard disponibile.|Protocol 9: experimental basic key editing available.|Protocolo 9: edición experimental de teclas básicas disponible.|Protocole 9 : modification expérimentale des touches standard disponible.|Protokoll 9: experimentelle Bearbeitung von Standardtasten verfügbar.
+VIA 9: puoi modificare solo i tasti standard.|VIA 9: only standard keys can be edited.|VIA 9: solo se pueden modificar las teclas estándar.|VIA 9 : seules les touches standard peuvent être modifiées.|VIA 9: Nur Standardtasten können bearbeitet werden.
+Layer Tap (LT)|Layer Tap (LT)|Layer Tap (LT)|Layer Tap (LT)|Layer Tap (LT)
+Premi per inviare il tasto; tieni premuto per attivare il layer.|Tap to send the key; hold to activate the layer.|Pulsa para enviar la tecla; mantén pulsado para activar la capa.|Appuyez pour envoyer la touche ; maintenez pour activer la couche.|Tippen sendet die Taste; Gedrückthalten aktiviert die Ebene.
+Layer da attivare|Layer to activate|Capa que activar|Couche à activer|Zu aktivierende Ebene
+Tasto da premere|Key to tap|Tecla al pulsar|Touche à envoyer|Taste beim Tippen
+Assegna Layer Tap|Assign Layer Tap|Asignar Layer Tap|Affecter Layer Tap|Layer Tap zuweisen
 Sola lettura sperimentale|Experimental read-only|Solo lectura experimental|Lecture seule expérimentale|Experimenteller Lesemodus
 Protocollo 9: mappa in sola lettura sperimentale; le modifiche sono disattivate.|Protocol 9: experimental read-only keymap; changes are disabled.|Protocolo 9: mapa experimental de solo lectura; cambios desactivados.|Protocole 9 : disposition expérimentale en lecture seule ; modifications désactivées.|Protokoll 9: experimentelle schreibgeschützte Belegung; Änderungen sind deaktiviert.
 Dimentica JSON VIA|Forget VIA JSONs|Olvidar JSON VIA|Oublier les JSON VIA|VIA-JSONs vergessen
@@ -188,3 +200,4 @@ document.addEventListener("DOMContentLoaded",()=>{
   }).observe(document.body,{subtree:true,childList:true,characterData:true});
   field.addEventListener("change",()=>{setUiLanguage(field.value);updateAppearance();});
 });
+

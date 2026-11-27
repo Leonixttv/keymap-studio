@@ -7,7 +7,7 @@ const context=vm.createContext({Uint8Array,DataView,Set,Map,Math,Number,Array,Er
 context.translateUi=value=>value;
 vm.runInContext(fs.readFileSync(require.resolve("../usb.js"),"utf8")+"\n"+
   fs.readFileSync(require.resolve("../diagnostics.js"),"utf8")+
-  "\nglobalThis.diagnose=diagnoseKey;globalThis.match=matchingViaDefinition;globalThis.loadVia=loadViaBoard;globalThis.Transport=HidTransport;",context);
+  "\nglobalThis.diagnose=diagnoseKey;globalThis.match=matchingViaDefinition;globalThis.loadVia=loadViaBoard;globalThis.Transport=HidTransport;globalThis.writeKey=writeKey;",context);
 
 test("read only the selected key in the selected layer with both commands",async()=>{
   const requests=[];
@@ -50,7 +50,7 @@ test("VIA protocol 9 loads as experimental read-only and skips optional write-ca
   }};
   const def={name:"Legacy",vendorId:"0x1234",productId:"0x0001",matrix:{rows:1,cols:1},layouts:{keymap:[["0,0"]]}};
   const board=await context.loadVia(link,def);
-  assert.equal(board.protocol,9);assert.equal(board.readOnly,true);assert.equal(link.readOnly,true);
+  assert.equal(board.protocol,9);assert.equal(board.readOnly,true);assert.equal(link.readOnly,true);assert.equal(board.basicWritesOnly,true);assert.equal(link.basicWritesOnly,true);
   assert.equal(board.macroCount,0);assert.equal(board.lighting,null);
   assert.deepEqual(requests,[[1],[0x11]]);
 });
@@ -61,4 +61,28 @@ test("read-only transport rejects keymap and other firmware writes",()=>{
   const link=new context.Transport(device);link.readOnly=true;
   assert.throws(()=>link.request([0x05,0,0,0,0,4]),/solo in lettura/);
   assert.throws(()=>link.request([0x03,2,0,0,0,0]),/solo in lettura/);
+});
+
+
+test("VIA 9 basic key edits are verified and advanced key writes are blocked",async()=>{
+  let code=4; const commands=[];
+  const link={async request(cmd){commands.push([...cmd]);const reply=new Uint8Array(32);reply.set(cmd);
+    if(cmd[0]===4){reply[4]=code>>8;reply[5]=code&255;}
+    if(cmd[0]===5) code=(cmd[4]<<8)|cmd[5];
+    return reply;}};
+  const board={rows:1,cols:1,basicWritesOnly:true};
+  await context.writeKey(link,board,0,5,4);
+  assert.equal(code,5);assert.deepEqual(commands.map(x=>x[0]),[4,5,4]);
+  await assert.rejects(context.writeKey(link,board,0,0x5101,5),/tasti standard/);
+  await assert.rejects(context.writeKey(link,board,0,5,0x5101),/tasti standard/);
+  assert.equal(commands.length,3);
+  code=6;await assert.rejects(context.writeKey(link,board,0,7,5),/cambiata/);
+  assert.equal(commands.length,4);
+});
+
+test("VIA 9 transport rejects advanced and unrelated writes",()=>{
+  const device={opened:true,collections:[{usagePage:0xff60,usage:0x61,inputReports:[{items:[{reportSize:8,reportCount:32}]}],outputReports:[{items:[{reportSize:8,reportCount:32}]}]}]};
+  const link=new context.Transport(device);link.readOnly=true;link.basicWritesOnly=true;
+  assert.throws(()=>link.request([5,0,0,0,0x51,1]),/solo in lettura/);
+  assert.throws(()=>link.request([3,2,0,0,0,0]),/solo in lettura/);
 });
