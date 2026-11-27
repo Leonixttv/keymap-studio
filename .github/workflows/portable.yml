@@ -1,7 +1,7 @@
 name: Portable builds
 on:
   push:
-    branches: [main, international]
+    branches: [main, international, feature/via9-layer-tap]
   workflow_dispatch:
 
 permissions:

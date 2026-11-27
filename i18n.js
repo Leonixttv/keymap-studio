@@ -58,6 +58,13 @@ Test tasti|Key tester|Prueba de teclas|Test des touches|Tastentest
 Seleziona un tasto, poi scegli la sua nuova funzione.|Select a key, then choose its new action.|Selecciona una tecla y elige su función.|Sélectionnez une touche, puis choisissez son action.|Wähle eine Taste und anschließend ihre Funktion.
 Layout della tastiera|Keyboard layout|Distribución del teclado|Disposition du clavier|Tastaturlayout
 Seleziona premendo un tasto|Select by pressing a key|Seleccionar al pulsar una tecla|Sélectionner en appuyant sur une touche|Durch Tastendruck auswählen
+Per la selezione fisica scegli il layer attivo sulla tastiera. La posizione è stimata dal codice ricevuto.|For physical selection, choose the layer active on the keyboard. The position is inferred from the received keycode.|Para seleccionar con el teclado, elige la capa activa. La posición se estima según el código recibido.|Pour la sélection physique, choisissez la couche active du clavier. La position est déduite du code reçu.|Wähle für die Tastenauswahl die aktive Tastaturebene. Die Position wird aus dem empfangenen Tastencode ermittelt.
+Seleziona da matrice USB|Select from USB matrix|Seleccionar desde la matriz USB|Sélectionner depuis la matrice USB|Über USB-Matrix auswählen
+Rilascia i tasti, poi premi il tasto da selezionare.|Release all keys, then press the key to select.|Suelta todas las teclas y pulsa la que quieras seleccionar.|Relâchez les touches, puis appuyez sur celle à sélectionner.|Lass alle Tasten los und drücke dann die gewünschte Taste.
+Posizione selezionata dalla matrice.|Position selected from the matrix.|Posición seleccionada desde la matriz.|Position sélectionnée depuis la matrice.|Position aus der Matrix ausgewählt.
+Posizione non univoca nella definizione del layout.|Position is not unique in the layout definition.|Posición ambigua en la definición del diseño.|Position ambiguë dans la définition du clavier.|Position in der Layoutdefinition nicht eindeutig.
+Nessuna pressione rilevata dalla matrice USB.|No keypress detected by the USB matrix.|La matriz USB no detectó ninguna pulsación.|Aucun appui détecté par la matrice USB.|Die USB-Matrix hat keinen Tastendruck erkannt.
+Lettura della matrice USB non riuscita.|Could not read the USB matrix.|No se pudo leer la matriz USB.|Impossible de lire la matrice USB.|Die USB-Matrix konnte nicht gelesen werden.
 Premi un tasto per selezionarlo.|Press a key to select it.|Pulsa una tecla para seleccionarla.|Appuyez sur une touche pour la sélectionner.|Drücke eine Taste, um sie auszuwählen.
 Assegnazione|Assignment|Asignación|Affectation|Zuweisung
 Nessun tasto selezionato|No key selected|Ninguna tecla seleccionada|Aucune touche sélectionnée|Keine Taste ausgewählt

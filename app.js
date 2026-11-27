@@ -294,7 +294,7 @@ function render() {
 }
 
 function resetMap(board, map, link) {
-  Object.assign(state, { board, link, saved:[...map], draft:[...map], layer:0, selected:null, light:null, fnLayer:1 });
+  Object.assign(state, { board, link, saved:[...map], draft:[...map], layer:0, selected:null, lastMatrixPosition:null, light:null, fnLayer:1 });
 }
 
 function assign(code) {
@@ -445,15 +445,15 @@ $("diagnose").onclick=async()=>{
       appVersion:await window.studioVersion?.().catch(()=>null) ?? null,
       platform:navigator.userAgentData?.platform || navigator.platform || "unknown",
       connection:link?.device.opened ? "connected" : "not connected",
-      lastConnectionError:lastConnectionAttempt};
-    if (link?.device.opened) {
+      lastConnectionError:lastConnectionAttempt, lastMatrixPosition:state.lastMatrixPosition ?? null};
+    if (link) {
       report.keyboard={name:board.name || null, vendorId:hex(link.device.vendorId), productId:hex(link.device.productId),
         firmware:board.kind, protocol:board.protocol, rows:board.rows, cols:board.cols, layers:board.layers,
         definition:board.kind==="via" ? "local VIA JSON" : "Vial firmware"};
       if (key) {
         const index=(layer*board.rows+key.row)*board.cols+key.col;
         report.selectedKey={layer,row:key.row,col:key.col,saved:hex(state.saved[index]),draft:hex(state.draft[index]),
-          reads:await diagnoseKey(link,board,layer,key)};
+          reads:link.device.opened ? await diagnoseKey(link,board,layer,key) : null};
       } else report.selectedKey=null;
     }
     $("diagnosticReport").value=JSON.stringify(report,null,2);
@@ -473,6 +473,8 @@ $("saveDiagnostic").onclick=()=>{
 
 navigator.hid?.addEventListener("disconnect", (event) => {
   if (event.device === state.link?.device) {
+    lastConnectionAttempt={stage:"WebHID disconnect", error:"Operating system reported that the HID device disconnected",
+      vendorId:hex(event.device.vendorId), productId:hex(event.device.productId)};
     setStatus("USB scollegato. Esporta la bozza se vuoi conservarla prima di ricollegare.", true);
     render();
   }

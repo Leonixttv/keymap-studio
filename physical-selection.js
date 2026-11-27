@@ -63,14 +63,10 @@ function findPressedKey(codes) {
   };
   const keys=activeKeys(board);
   const unique=results=>[...new Map(results.map(key=>[key.row+","+key.col,key])).values()];
-  // The hardware usually remains on its base layer while another layer is selected for editing.
-  const exact=unique(byLayer(keys,0,false));
-  if (exact.length) return exact;
-  const tapped=unique(byLayer(keys,0,true));
-  if (tapped.length) return tapped;
-  if (!layer) return [];
-  const layerMatches=unique(byLayer(keys,layer,false));
-  return layerMatches.length ? layerMatches : unique(byLayer(keys,layer,true));
+  // A keyboard may use a different default layer for each OS mode. Match only
+  // the layer selected by the user; guessing layer 0 can select a different key.
+  const exact=unique(byLayer(keys,layer,false));
+  return exact.length ? exact : unique(byLayer(keys,layer,true));
 }
 
 const inputToggle=$("physicalSelect");
