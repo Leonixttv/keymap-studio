@@ -7,6 +7,8 @@ Modalità demo|Demo mode|Modo demo|Mode démo|Demomodus
 Collega via USB|Connect via USB|Conectar por USB|Connecter en USB|Per USB verbinden
 Scollega|Disconnect|Desconectar|Déconnecter|Trennen
 USB scollegato|USB disconnected|USB desconectado|USB déconnecté|USB getrennt
+Interfaccia di configurazione scollegata|Configuration interface disconnected|Interfaz de configuración desconectada|Interface de configuration déconnectée|Konfigurationsschnittstelle getrennt
+L’interfaccia di configurazione USB si è scollegata; la tastiera potrebbe continuare a funzionare. Esporta la bozza e ricollega la tastiera per riprendere la configurazione.|The USB configuration interface disconnected; the keyboard may still work. Export your draft and reconnect the keyboard to resume configuration.|La interfaz de configuración USB se ha desconectado; es posible que el teclado siga funcionando. Exporta el borrador y vuelve a conectar el teclado para continuar.|L’interface de configuration USB s’est déconnectée ; le clavier peut encore fonctionner. Exportez le brouillon et reconnectez le clavier pour reprendre la configuration.|Die USB-Konfigurationsschnittstelle wurde getrennt; die Tastatur funktioniert möglicherweise weiterhin. Exportiere den Entwurf und verbinde die Tastatur erneut, um die Konfiguration fortzusetzen.
 Torna alla demo|Back to demo|Volver a la demo|Retour à la démo|Zurück zur Demo
 CONFIGURATORE USB · VIAL E VIA|USB CONFIGURATOR · VIAL AND VIA|CONFIGURADOR USB · VIAL Y VIA|CONFIGURATEUR USB · VIAL ET VIA|USB-KONFIGURATOR · VIAL UND VIA
 Tastiere custom|Custom keyboards|Teclados personalizados|Claviers personnalisés|Individuelle Tastaturen

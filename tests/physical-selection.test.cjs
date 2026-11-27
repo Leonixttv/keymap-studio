@@ -24,10 +24,24 @@ test("USB matrix selects the physical position independently of the assigned key
   vm.runInContext(fs.readFileSync(require.resolve("../matrix.js"), "utf8") +
     "\nglobalThis.presses = newlyPressedMatrixKeys;", matrix);
   const before = new Uint8Array(32);
-  before[3] = 1; // Keep an unrelated switch held.
+  before[4] = 1; // Keep an unrelated switch held.
   const after = before.slice();
-  after[6] = 1 << 6; // Row 2, col 14 in a 16-column matrix.
+  after[7] = 1 << 6; // Row 2, col 14 in a 16-column matrix.
   assert.deepEqual(Array.from(matrix.presses(before, after, 6, 16), ({row, col}) => [row, col]), [[2, 14]]);
-  after[8] = 1 << 5; // Row 3, col 13 is a distinct physical position.
+  after[9] = 1 << 5; // Row 3, col 13 is a distinct physical position.
   assert.deepEqual(Array.from(matrix.presses(before, after, 6, 16), ({row, col}) => [row, col]), [[2, 14], [3, 13]]);
+});
+
+test("VIA matrix response skips the row-offset header and decodes K2 HE right-hand keys", () => {
+  const matrix = vm.createContext({$: () => ({}), document: {addEventListener() {}}, state: {board: {}}});
+  vm.runInContext(fs.readFileSync(require.resolve("../matrix.js"), "utf8") +
+    "\nglobalThis.presses = newlyPressedMatrixKeys;", matrix);
+  const before = new Uint8Array(32);
+  before.set([2, 3, 0]); // get_keyboard_value, switch_matrix_state, starting row
+  for (const [row, col] of [[0,14], [0,15], [1,14], [2,14], [3,14]]) {
+    const after = before.slice();
+    // VIA sends each 16-bit matrix row high byte first.
+    after[3 + row * 2] = 1 << (col - 8);
+    assert.deepEqual(Array.from(matrix.presses(before, after, 6, 16), ({row, col}) => [row, col]), [[row, col]]);
+  }
 });

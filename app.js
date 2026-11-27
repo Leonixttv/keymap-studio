@@ -215,7 +215,7 @@ function render() {
   const online = !!state.link?.device.opened;
   $("boardTitle").textContent = state.link ? state.board.name || state.link.device.productName || "Tastiera USB" : "Tastiere custom";
   $("device").textContent = online ? state.board.name || state.link.device.productName
-    : state.link ? "USB scollegato" : "Modalità demo";
+    : state.link ? "Interfaccia di configurazione scollegata" : "Modalità demo";
   $("device").classList.toggle("online", online);
   $("connect").textContent = online ? "Scollega" : state.link ? "Torna alla demo" : "Collega via USB";
   $("subtitle").textContent = state.link ? "Firmware "+(state.board.kind==="via"?"VIA":"Vial")+" · protocollo "+state.board.protocol+(state.board.readOnly ? " · "+translateUi(state.board.basicWritesOnly ? "Modifica tasti base sperimentale" : "Sola lettura sperimentale") : "")
@@ -475,7 +475,7 @@ navigator.hid?.addEventListener("disconnect", (event) => {
   if (event.device === state.link?.device) {
     lastConnectionAttempt={stage:"WebHID disconnect", error:"Operating system reported that the HID device disconnected",
       vendorId:hex(event.device.vendorId), productId:hex(event.device.productId)};
-    setStatus("USB scollegato. Esporta la bozza se vuoi conservarla prima di ricollegare.", true);
+    setStatus("L’interfaccia di configurazione USB si è scollegata; la tastiera potrebbe continuare a funzionare. Esporta la bozza e ricollega la tastiera per riprendere la configurazione.", true);
     render();
   }
 });

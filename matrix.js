@@ -16,7 +16,9 @@ function syncMatrix() {
 
 function matrixKeyPressed(data, cols, row, col) {
   const bytesPerRow = Math.ceil(cols / 8);
-  const offset = 2 + row * bytesPerRow + bytesPerRow - 1 - (col >> 3);
+  // The response starts with command, value ID and row offset; matrix data
+  // begins at byte 3. Each row is sent most-significant byte first.
+  const offset = 3 + row * bytesPerRow + bytesPerRow - 1 - (col >> 3);
   return Boolean(data[offset] & (1 << (col % 8)));
 }
 
